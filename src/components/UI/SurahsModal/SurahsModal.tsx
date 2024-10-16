@@ -70,22 +70,7 @@ const SurahsModal = ({
       onBackdropPress={() => setModalVisible(false)}
       style={styles.modalContainer}
     >
-      <View style={styles.modalContent}>
-        {/* Surahs List */}
-        <View style={styles.listSection}>
-          <TextBold styles="text-center mt-4 text-text-primary-green text-lg">
-            سور القران الكريم
-          </TextBold>
-          <FlatList
-            data={surahsData}
-            renderItem={renderSurahItem}
-            keyExtractor={(item) => item.id.toString()}
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
-            windowSize={10}
-          />
-        </View>
-      </View>
+      <View style={styles.modalContent}></View>
     </Modal>
   );
 };

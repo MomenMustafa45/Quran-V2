@@ -23,12 +23,12 @@ type DrawerContentProps = DrawerNavigationProp<RootNavigationParamList>;
 type CustomDrawerHeaderProps = {
   setJuzModal: () => void;
 
-  setModalVisibleSearch: () => void;
+  setModalVisibleSurah: () => void;
   bookmarkHandler: () => void;
 };
 
 const CustomDrawerHeader = ({
-  setModalVisibleSearch,
+  setModalVisibleSurah,
   bookmarkHandler,
   setJuzModal,
 }: CustomDrawerHeaderProps) => {
@@ -59,7 +59,7 @@ const CustomDrawerHeader = ({
           height: "100%",
         }}
       />
-      <TouchableOpacity onPress={() => setJuzModal()}>
+      <TouchableOpacity onPress={setJuzModal}>
         <Entypo name="menu" size={22} color="white" />
       </TouchableOpacity>
       <TextReg styles="text-white">مصحف المسلمين</TextReg>
@@ -67,7 +67,10 @@ const CustomDrawerHeader = ({
         <TouchableOpacity onPress={bookmarkHandler} style={{ marginLeft: 5 }}>
           <Feather name="bookmark" size={22} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity style={{ marginLeft: 5 }}>
+        <TouchableOpacity
+          style={{ marginLeft: 5 }}
+          onPress={setModalVisibleSurah}
+        >
           <Entypo name="menu" size={22} color="white" />
         </TouchableOpacity>
       </View>

@@ -54,54 +54,13 @@ const SearchModal = ({
   return (
     <Modal
       isVisible={modalVisible}
-      animationIn="slideInLeft"
-      animationOut="slideOutLeft"
+      animationIn="slideInUp"
+      animationOut="slideOutDown"
       backdropOpacity={0.5}
       onBackdropPress={() => setModalVisible(false)}
       style={styles.modalContainer}
     >
-      {isLoadingData ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#159C3E" />
-          <TextReg>Downloading Data...</TextReg>
-        </View>
-      ) : (
-        <View style={styles.modalContent}>
-          <View className="flex flex-row items-center">
-            <Button title="ابحث" onPress={handleSearch} color="#22c55e" />
-
-            <TextInput
-              style={styles.input}
-              placeholder="ادخل الكلمة"
-              value={searchTerm}
-              onChangeText={setSearchTerm}
-            />
-            <Text style={styles.count}>{filteredData.length} آيات</Text>
-          </View>
-
-          <FlatList
-            data={filteredData}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => {
-                  goToPage(item.page_number);
-                  setModalVisible(false);
-                }}
-                style={{
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#0CB697",
-                  marginBottom: 5,
-                }}
-              >
-                <Text style={styles.ayat}>{item.text_uthmani}</Text>
-              </TouchableOpacity>
-            )}
-            keyExtractor={(item) => item.id.toString()}
-            style={styles.list}
-            showsVerticalScrollIndicator={false}
-          />
-        </View>
-      )}
+      <View style={styles.modalContent}></View>
     </Modal>
   );
 };
@@ -111,43 +70,15 @@ export default SearchModal;
 const styles = StyleSheet.create({
   modalContainer: {
     margin: 0,
+    display: "flex",
+    alignItems: "flex-end",
+    justifyContent: "flex-end",
   },
   modalContent: {
-    width: "70%",
-    height: "100%",
+    width: "100%",
+    height: "40%",
     backgroundColor: "white",
-    justifyContent: "center",
-    alignItems: "center",
     padding: 20,
-  },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-    marginBottom: 20,
-  },
-  input: {
-    textAlign: "right",
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    flex: 1,
-    margin: 10,
-  },
-  count: {
-    fontSize: 16,
-  },
-  list: {
-    width: "100%",
-  },
-  ayat: {
-    fontSize: 16,
-    padding: 10,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    display: "flex",
   },
 });

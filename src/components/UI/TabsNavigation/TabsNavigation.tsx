@@ -12,7 +12,11 @@ const MAX_LEVEL = 3;
 
 type TabsNavigationProps = DrawerNavigationProp<RootNavigationParamList>;
 
-const TabsNavigation = () => {
+type TabsNavigationProp = {
+  setModalSearch: () => void;
+};
+
+const TabsNavigation = ({ setModalSearch }: TabsNavigationProp) => {
   const [levelSound, setLevelSound] = useState("1");
   const navigation = useNavigation<TabsNavigationProps>();
   const route = useRoute();
@@ -86,7 +90,7 @@ const TabsNavigation = () => {
       </View>
       {/* search */}
       <View>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={setModalSearch}>
           <Feather
             name="search"
             size={24}

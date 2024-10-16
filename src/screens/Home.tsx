@@ -26,6 +26,7 @@ import SurahsModal from "../components/UI/SurahsModal/SurahsModal";
 import PageQuran from "../components/UI/PageQuran/PageQuran";
 import { fetchAndStoreQuranPages } from "../services/quranPagesServices";
 import * as FileSystem from "expo-file-system";
+import SearchModal from "../components/UI/SearchModal/SearchModal";
 
 export type VerseType = {
   chapter_number: number;
@@ -53,6 +54,8 @@ const Home = () => {
   const [isScrolling, setIsScrolling] = useState(false);
 
   // modals
+
+  const [surahModal, setSurahModal] = useState(false);
   const [juzModal, setJuzModal] = useState(false);
   const [modalVisibleSearch, setModalVisibleSearch] = useState(false);
 
@@ -143,7 +146,6 @@ const Home = () => {
     saveBookmark({ pageNumber: currentIndex }); // Saving bookmark with page number
   };
 
-  // functions part
   // Function to scroll to a specific index in FlatList
   const scrollToIndex = (index: number) => {
     setIsScrolling(true);
@@ -238,7 +240,7 @@ const Home = () => {
     <>
       <CustomDrawerHeader
         setJuzModal={() => setJuzModal(true)}
-        setModalVisibleSearch={() => setModalVisibleSearch(true)}
+        setModalVisibleSurah={() => setSurahModal(true)}
         bookmarkHandler={() => handleBookmark(0)}
       />
       <View
@@ -279,7 +281,26 @@ const Home = () => {
           />
         </View>
       </View>
-      <TabsNavigation />
+
+      {/* juz modal */}
+      <JuzModal
+        goToPage={scrollToIndex}
+        modalVisible={juzModal}
+        setModalVisible={setJuzModal}
+      />
+      {/* surah modal */}
+      <SurahsModal
+        goToPage={scrollToIndex}
+        modalVisible={surahModal}
+        setModalVisible={setSurahModal}
+      />
+      {/* search */}
+      <SearchModal
+        goToPage={scrollToIndex}
+        modalVisible={modalVisibleSearch}
+        setModalVisible={setModalVisibleSearch}
+      />
+      <TabsNavigation setModalSearch={() => setModalVisibleSearch(true)} />
     </>
   );
 };

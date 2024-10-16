@@ -63,22 +63,7 @@ const JuzModal = ({
       onBackdropPress={() => setModalVisible(false)}
       style={styles.modalContainer}
     >
-      <View style={styles.modalContent}>
-        {/* Parts List */}
-        <View style={styles.listSection}>
-          <TextBold styles="text-center mt-4 text-text-primary-green text-lg">
-            الجزء
-          </TextBold>
-          <FlatList
-            data={parts}
-            renderItem={renderPartItem}
-            keyExtractor={(item) => item.part.toString()}
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
-            windowSize={10}
-          />
-        </View>
-      </View>
+      <View style={styles.modalContent}></View>
     </Modal>
   );
 };
@@ -99,11 +84,7 @@ const styles = StyleSheet.create({
     padding: 20,
     display: "flex",
   },
-  inputSection: {
-    borderBottomWidth: 2,
-    borderBottomColor: "black",
-    paddingBottom: 10,
-  },
+
   listSection: {
     flex: 1,
     borderBottomWidth: 2,
