@@ -228,7 +228,7 @@ const Home = () => {
     }
 
     return (
-      <View className="w-screen bg-slate-500 px-2">
+      <View className="w-screen p-2">
         <PageQuran dataPage={data} pageNumber={604 - index} />
       </View>
     );
