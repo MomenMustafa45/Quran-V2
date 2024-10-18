@@ -60,7 +60,12 @@ const SearchModal = ({
       onBackdropPress={() => setModalVisible(false)}
       style={styles.modalContainer}
     >
-      <View style={styles.modalContent}></View>
+      <View style={styles.modalContent}>
+       <View style={styles.search}>
+        <TextInput style={styles.textInput}></TextInput>
+         <Button color="#1ab971" title="ابحث " />
+         </View>
+      </View>
     </Modal>
   );
 };
@@ -79,6 +84,16 @@ const styles = StyleSheet.create({
     height: "40%",
     backgroundColor: "white",
     padding: 20,
-    display: "flex",
+  
   },
+  search:{
+      display: "flex",
+    flexDirection:"row",
+    justifyContent:"space-around"
+  },
+  textInput:{
+    borderColor:"black",
+    borderWidth:1,
+    width:"80%"
+  }
 });

@@ -54,6 +54,20 @@ const JuzModal = ({
     [handleIndexButton]
   );
 
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => handleIndexButton(item.startPage)}>
+      <View>
+        <View style={styles.listItem}>
+          <TextReg>
+            <>{item.startPage}</>
+          </TextReg>
+
+          <TextReg>{item.title}</TextReg>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
   return (
     <Modal
       isVisible={modalVisible}
@@ -63,7 +77,18 @@ const JuzModal = ({
       onBackdropPress={() => setModalVisible(false)}
       style={styles.modalContainer}
     >
-      <View style={styles.modalContent}></View>
+      <View style={styles.modalContent}>
+        <View style={styles.modalHeader}>
+          <TextReg>رقم الصفحة</TextReg>
+
+          <TextReg>الجزء</TextReg>
+        </View>
+        <FlatList
+          data={parts}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </View>
     </Modal>
   );
 };
@@ -76,15 +101,15 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "flex-end",
     alignItems: "flex-end",
+    width: 300,
+    marginBottom: "auto",
   },
   modalContent: {
     width: "100%",
-    height: "90%",
+    height: "100%",
     backgroundColor: "white",
-    padding: 20,
     display: "flex",
   },
-
   listSection: {
     flex: 1,
     borderBottomWidth: 2,
@@ -95,8 +120,18 @@ const styles = StyleSheet.create({
     padding: 15,
     borderBottomWidth: 1,
     borderBottomColor: "#34a853",
-    flexDirection: "row",
-    justifyContent: "flex-end",
+
     alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  modalHeader: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "#1ab971",
+    height: 50,
+    padding: 10,
   },
 });
