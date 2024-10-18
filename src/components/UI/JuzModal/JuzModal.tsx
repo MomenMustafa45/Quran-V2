@@ -109,17 +109,13 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: "white",
     display: "flex",
-    borderLeftWidth:2,
-    borderLeftColor: "#34a853",
+   
   },
   listSection: {
     flex: 1,
     borderBottomWidth: 2,
     borderBottomColor: "#34a853",
-    borderLeftWidth:2,
-    borderLeftColor: "#34a853",
-    borderRightWidth:2,
-    borderRightColor: "#34a853",
+ 
     marginTop: 10,
   },
   listItem: {
