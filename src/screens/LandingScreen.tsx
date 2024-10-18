@@ -4,12 +4,12 @@ import { ScrollView } from "react-native-gesture-handler";
 
 const LandingScreen = () => {
   const imagesData = [
-    { id: '1', text: 'مصحف المدينة قالون', image: require('../../assets/images/LandingImages/1 (1) 1.png') },
-    { id: '2', text: 'مصحف المدينة الدوري', image: require('../../assets/images/LandingImages/1 (2) 1.png') },
-    { id: '3', text: 'مصحف المدينة حفص', image: require('../../assets/images/LandingImages/1 89.png') },
-    { id: '4', text: 'مصحف المدينة أردو', image: require('../../assets/images/LandingImages/8b5deb3776b18fc13bc1683469f745a0 1.png') },
-    { id: '5', text: 'مصحف المدينة ورش', image: require('../../assets/images/LandingImages/Mushaf_AlMadinah_Warsh_549 1.png') },
-    { id: '6', text: 'مصحف المدينة شعبة', image: require('../../assets/images/LandingImages/تنزيل 1.png') },
+    { id: '1', text: 'مصحف المدينة حفص', image: require('../../assets/images/LandingImages/Mushaf_AlMadinah-Hafs.png') },
+    { id: '2', text: 'مصحف المدينة شعبة', image: require('../../assets/images/LandingImages/Mushaf_AlMadinah-Shopaa.png') },
+    { id: '3', text: 'مصحف المدينة الدوري', image: require('../../assets/images/LandingImages/Mushaf_AlMadinah-Dory.png') },
+    { id: '4', text: 'مصحف المدينة أردو', image: require('../../assets/images/LandingImages/Mushaf_AlMadinah-Ordo.png') },
+    { id: '5', text: 'مصحف المدينة قالون', image: require('../../assets/images/LandingImages/Mushaf_AlMadinah-Qalon.png') },
+    { id: '6', text: 'مصحف المدينة ورش', image: require('../../assets/images/LandingImages/Mushaf_AlMadinah_Warsh.png') },
   ];
 
   return (
