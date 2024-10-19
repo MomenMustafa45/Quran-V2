@@ -12,7 +12,6 @@ import TextReg from "../components/UI/Texts/TextReg";
 import {
   checkForDownloadedAudio,
   fetchAndDownloadAudioForAllPages,
-  loadWordsAndAudio,
 } from "../services/audioServices";
 import { WordVerseType } from "../lib/types/localVerseAndWordType";
 import CustomDrawerHeader from "../components/UI/CustomDrawerHeader/CustomDrawerHeader";
@@ -20,96 +19,53 @@ import { saveBookmark } from "../services/bookmarkServices";
 import { useRoute } from "@react-navigation/native";
 import playSoundsFromPaths, { stopPlayback } from "../services/playSound";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import IndexModal from "../components/UI/IndexModal/IndexModal";
 import JuzModal from "../components/UI/JuzModal/JuzModal";
 import SurahsModal from "../components/UI/SurahsModal/SurahsModal";
 import PageQuran from "../components/UI/PageQuran/PageQuran";
 import { fetchAndStoreQuranPages } from "../services/quranPagesServices";
 import * as FileSystem from "expo-file-system";
 import SearchModal from "../components/UI/SearchModal/SearchModal";
-
-export type VerseType = {
-  chapter_number: number;
-  id: number;
-  img_coords: string;
-  img_url: string;
-  page_number: number;
-  text_imlaei_simple: string;
-  verse_number: number;
-};
+import { QuranVerse } from "../lib/types/quranWordType";
 
 const width = Dimensions.get("window").width;
+
 const Home = () => {
   const [quranPagesPaths, setQuranPagesPaths] = useState<string[]>([]);
   const [wordsVerses, setWordsVerses] = useState<WordVerseType[]>([]);
   const [pageData, setPageData] = useState<Record<string, any>>({});
-  const [pageIndex, setPageIndex] = useState(1);
-
-  // progress percentage
-  const [progressImages, setProgressImages] = useState(0); // For progress bar
-  const [gettingMoreAudiosProgress, setGettingMoreAudiosProgress] = useState(0);
-  // loading status
-  const [isLoadingImages, setIsLoadingImages] = useState(true); // For loading indicator
+  const [isLoadingImages, setIsLoadingImages] = useState(true);
   const [isGettingMoreAudios, setIsGettingMoreAudios] = useState(false);
-  const [isScrolling, setIsScrolling] = useState(false);
-
-  // modals
 
   const [surahModal, setSurahModal] = useState(false);
   const [juzModal, setJuzModal] = useState(false);
   const [modalVisibleSearch, setModalVisibleSearch] = useState(false);
 
-  // ref
   const flatListRef = useRef<FlatList>(null);
-
-  // route params
   const { params }: any = useRoute();
 
-  const getTheData = async (verseId: number, page_number: number) => {
-    const wordsData = await loadWordsAndAudio({ pageNumber: page_number });
-
-    if (wordsData.length == 0) {
-      const wordsData = await fetchAndDownloadAudioForAllPages({
-        setIsLoadingAudios: setIsGettingMoreAudios,
-        setProgressAudio: setGettingMoreAudiosProgress,
-        startPage: page_number,
-        TOTAL_PAGES: 1,
-      });
-
-      setWordsVerses([...wordsData]);
-    } else {
-      setWordsVerses([...wordsData]);
-    }
-  };
-
-  const getTheDataFromPath = async (path: string) => {
+  let currentIndex = quranPagesPaths.length - 1;
+  const getTheDataFromPath = useCallback(async (path: string) => {
     try {
-      // Read the JSON file from the file path
       const pageData = await FileSystem.readAsStringAsync(path);
       return JSON.parse(pageData);
     } catch (error) {
       console.error(`Error reading data from ${path}:`, error);
-      return null; // Return null or some fallback data
+      return null;
     }
-  };
+  }, []);
 
   useEffect(() => {
-    // Fetch and store Quran pages when the app is first opened
     const loadQuranPages = async () => {
       try {
-        const paths = await fetchAndStoreQuranPages(); // Get the array of file paths
-        setQuranPagesPaths([...paths.reverse()]); // Set the paths to state
-        // Load data for each page
+        const paths = await fetchAndStoreQuranPages();
+        setQuranPagesPaths([...paths.reverse()]);
         const dataPromises = paths.map((path) => getTheDataFromPath(path));
         const allPageData = await Promise.all(dataPromises);
-
-        // Map paths to their corresponding data
-        const pageDataMap: Record<string, any> = {};
-        paths.forEach((path, index) => {
-          pageDataMap[path] = allPageData[index];
-        });
-
-        setPageData(pageDataMap); // Store all page data
+        const pageDataMap = paths.reduce((map, path, index) => {
+          map[path] = allPageData[index];
+          return map;
+        }, {} as Record<string, any>);
+        setPageData(pageDataMap);
       } catch (error) {
         console.error("Error loading Quran pages:", error);
       } finally {
@@ -118,24 +74,19 @@ const Home = () => {
     };
 
     loadQuranPages();
-  }, []);
+  }, [getTheDataFromPath]);
 
-  // Fetch and download data
   useEffect(() => {
-    if (wordsVerses.length <= 0) {
-      getTheData(0, 1);
+    if (wordsVerses?.length === 0) {
+      // getTheData(1);
     }
-
-    // for audio
     checkForDownloadedAudio({
       setIsLoadingAudios: setIsGettingMoreAudios,
-      setProgressAudio: setGettingMoreAudiosProgress,
-      TOTAL_PAGES: 1,
       startPage: 1,
+      TOTAL_PAGES: 1,
     });
   }, []);
 
-  // params scroll to wanted page
   useEffect(() => {
     if (params?.pageNumber) {
       scrollToIndex(params.pageNumber);
@@ -143,67 +94,133 @@ const Home = () => {
   }, [params]);
 
   const handleBookmark = async (currentIndex: number) => {
-    saveBookmark({ pageNumber: currentIndex }); // Saving bookmark with page number
+    saveBookmark({ pageNumber: currentIndex });
   };
 
-  // Function to scroll to a specific index in FlatList
-  const scrollToIndex = (index: number) => {
-    setIsScrolling(true);
+  const scrollToIndex = useCallback((index: number) => {
     if (flatListRef.current) {
       flatListRef.current.scrollToIndex({
-        index: 604 - index, // index of the item to scroll to
+        index: 604 - index,
         animated: false,
-        viewPosition: 0.5, // this positions the item in the middle of the screen
+        viewPosition: 0.5,
       });
     }
-    getTheData(0, index);
-    setIsScrolling(false);
-  };
+    // getTheData(index);
+  }, []);
 
-  const handleWebViewMessage = useCallback(
-    async (event: any, index: number) => {
-      const message = event.nativeEvent.data;
+  const listenHandler = useCallback(
+    async (
+      quranVerseItem: QuranVerse,
+      quranVerses: QuranVerse[],
+      pageNumber: number
+    ) => {
       const levelNumber = await AsyncStorage.getItem("levelSound");
+
       try {
         if (levelNumber) {
-          if (isGettingMoreAudios) {
-            return;
-          } else {
-            const verseObject = JSON.parse(message);
-            stopPlayback();
-            if (levelNumber == "1") {
-              playSoundsFromPaths([verseObject.local_audio_path]);
-            } else if (levelNumber == "2") {
-              const soundArr = wordsVerses.find(
-                (item) => item.id == verseObject.id + 1
-              );
+          stopPlayback();
 
-              playSoundsFromPaths([
-                verseObject.local_audio_path,
-                soundArr?.local_audio_path,
-              ]);
+          let soundArr: string[] = [];
+
+          // Logic for different levels
+          if (levelNumber === "1") {
+            // Level 1: Only the pressed object's path
+            soundArr = quranVerses
+              .filter((item) => item.id === quranVerseItem.id && item.audio_url)
+              .map(
+                (item) =>
+                  `file:///data/user/0/host.exp.exponent/files//w${item.id}-v${item.verse_id}-p${item.page_number}.mp3`
+              );
+          } else if (levelNumber === "2") {
+            soundArr = quranVerses
+              .filter(
+                (item) =>
+                  (item.id === quranVerseItem.id ||
+                    item.id === quranVerseItem.id + 1) &&
+                  item.audio_url
+              )
+              .map(
+                (item) =>
+                  `file:///data/user/0/host.exp.exponent/files//w${item.id}-v${item.verse_id}-p${item.page_number}.mp3`
+              );
+          } else if (levelNumber === "3") {
+            // Level 3: All words that share the same verse_id
+            soundArr = quranVerses
+              .filter(
+                (item) =>
+                  item.verse_id === quranVerseItem.verse_id && item.audio_url
+              )
+              .map(
+                (item) =>
+                  `file:///data/user/0/host.exp.exponent/files//w${item.id}-v${item.verse_id}-p${item.page_number}.mp3`
+              );
+          }
+
+          console.log("Sound paths:", soundArr);
+
+          const missingFiles = [];
+
+          // Check if each file exists
+          for (const soundPath of soundArr) {
+            const fileInfo = await FileSystem.getInfoAsync(soundPath);
+            if (!fileInfo.exists) {
+              console.log(`File does not exist: ${soundPath}`);
+              missingFiles.push(soundPath); // Collect missing files
             } else {
-              const soundArr = Array.from(
-                new Set(
-                  wordsVerses
-                    .filter(
-                      (item) =>
-                        item.verse_id === verseObject.verse_id &&
-                        item.local_audio_path != undefined
-                    )
-                    .map((item) => item.local_audio_path)
-                )
-              );
-
-              playSoundsFromPaths([...soundArr]);
+              console.log(`File exists: ${soundPath}`);
             }
+          }
+
+          // If there are missing files, download them
+          if (missingFiles.length > 0) {
+            console.log("Downloading missing audio files...");
+            await fetchAndDownloadAudioForAllPages({
+              setIsLoadingAudios: setIsGettingMoreAudios,
+              startPage: pageNumber,
+              TOTAL_PAGES: 1,
+            });
+          }
+
+          // After downloading, recheck all files and then play them
+          const allFilesExist = await Promise.all(
+            soundArr.map(async (soundPath) => {
+              const fileInfo = await FileSystem.getInfoAsync(soundPath);
+              return fileInfo.exists;
+            })
+          );
+
+          if (allFilesExist.every((exists) => exists)) {
+            console.log("All files are ready, playing sounds...");
+            await playSoundsFromPaths(soundArr); // Play sounds
+          } else {
+            console.warn("Some files are still missing after download.");
           }
         }
       } catch (error) {
-        console.warn("Failed to parse message:", message);
+        console.warn("Error in listenHandler:", error);
       }
     },
-    [isGettingMoreAudios, wordsVerses]
+    []
+  );
+
+  const renderItem = useCallback(
+    ({ item, index }: { item: string; index: number }) => {
+      const data = pageData[item];
+      return data ? (
+        <View style={styles.pageContainer}>
+          <PageQuran
+            dataPage={data}
+            pageNumber={604 - index}
+            listenHandler={listenHandler}
+          />
+        </View>
+      ) : (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="small" color="#159C3E" />
+        </View>
+      );
+    },
+    [pageData]
   );
 
   if (isLoadingImages) {
@@ -211,90 +228,59 @@ const Home = () => {
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#159C3E" />
         <TextReg>جاري تحميل البيانات...</TextReg>
-        <TextReg>
-          <>{Math.floor(progressImages * 100)}%</>
-        </TextReg>
       </View>
     );
   }
-
-  const renderItem = ({ item, index }: { item: string; index: number }) => {
-    const data = pageData[item];
-
-    if (!data) {
-      return (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="small" color="#159C3E" />
-        </View>
-      );
-    }
-
-    return (
-      <View className="w-screen p-2">
-        <PageQuran dataPage={data} pageNumber={604 - index} />
-      </View>
-    );
-  };
 
   return (
     <>
       <CustomDrawerHeader
         setJuzModal={() => setJuzModal(true)}
         setModalVisibleSurah={() => setSurahModal(true)}
-        bookmarkHandler={() => handleBookmark(0)}
+        bookmarkHandler={() => handleBookmark(currentIndex)}
       />
-      <View
-        className=" relative flex-1 bg-white"
-        style={{ direction: "rtl", height: "100%" }}
-      >
+      <View style={styles.container}>
         {isGettingMoreAudios && (
-          <View className="w-full bg-[#159C3E] flex-row justify-center items-center">
+          <View style={styles.audioLoading}>
             <ActivityIndicator size="small" color="#fff" />
             <TextReg styles="text-xs mx-2 text-white text-bold pt-1">
               جاري تحميل الصوتيات
             </TextReg>
           </View>
         )}
-        <View className="flex-1">
-          <FlatList
-            pagingEnabled
-            horizontal
-            ref={flatListRef}
-            directionalLockEnabled={false}
-            onMomentumScrollEnd={async (event) => {
-              const index = Math.floor(
-                event.nativeEvent.contentOffset.x / width
-              );
-            }}
-            data={quranPagesPaths}
-            initialScrollIndex={603}
-            getItemLayout={(data, index) => ({
-              length: width,
-              offset: width * index,
-              index,
-            })}
-            keyExtractor={(item) => item}
-            renderItem={renderItem}
-            initialNumToRender={5}
-            maxToRenderPerBatch={15}
-            windowSize={5}
-          />
-        </View>
+        <FlatList
+          pagingEnabled
+          horizontal
+          ref={flatListRef}
+          data={quranPagesPaths}
+          renderItem={renderItem}
+          keyExtractor={(item) => item}
+          initialNumToRender={5}
+          maxToRenderPerBatch={15}
+          windowSize={5}
+          onMomentumScrollEnd={async (event) => {
+            const index = Math.floor(event.nativeEvent.contentOffset.x / width);
+            currentIndex = index;
+          }}
+          getItemLayout={(data, index) => ({
+            length: width,
+            offset: width * index,
+            index,
+          })}
+          initialScrollIndex={quranPagesPaths.length - 1}
+        />
       </View>
 
-      {/* juz modal */}
       <JuzModal
         goToPage={scrollToIndex}
         modalVisible={juzModal}
         setModalVisible={setJuzModal}
       />
-      {/* surah modal */}
       <SurahsModal
         goToPage={scrollToIndex}
         modalVisible={surahModal}
         setModalVisible={setSurahModal}
       />
-      {/* search */}
       <SearchModal
         goToPage={scrollToIndex}
         modalVisible={modalVisibleSearch}
@@ -310,40 +296,23 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "white",
+    direction: "rtl",
   },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-  webViewContainer: {
-    flex: 1,
-    backgroundColor: "red",
-    padding: 0,
-    height: "100%",
-    width: width,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-  },
-  modalContainer: {
-    justifyContent: "flex-end",
-    alignItems: "flex-end",
-    margin: 0,
-  },
-  modalContent: {
+  audioLoading: {
     width: "100%",
-    height: "auto",
-    backgroundColor: "white",
-    borderRadius: 10,
+    backgroundColor: "#159C3E",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
   },
-  closeButton: {
-    marginTop: 10,
-    padding: 10,
-    borderRadius: 5,
+  pageContainer: {
+    width,
+    padding: 2,
   },
 });

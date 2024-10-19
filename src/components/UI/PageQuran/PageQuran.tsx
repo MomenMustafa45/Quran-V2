@@ -9,16 +9,25 @@ import {
 import { QuranVerse } from "../../../lib/types/quranWordType";
 import useFonts from "../../../hooks/useFonts";
 import VerseText from "../VerseText/VerseText";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PageQuran = ({
   dataPage,
   pageNumber,
+  listenHandler,
 }: {
   dataPage: QuranVerse[];
   pageNumber: number;
+  listenHandler: (
+    item: QuranVerse,
+    verse: QuranVerse[],
+    pageNumber: number
+  ) => void;
 }) => {
   const lineNumbers = Array.from({ length: 15 }, (_, index) => index + 1);
   const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  const [soundsPlayingArr, setSoundsPlayingArr] = useState<QuranVerse[]>([]);
 
   useEffect(() => {
     const loadFonts = async () => {
@@ -33,6 +42,37 @@ const PageQuran = ({
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
+  const handleListen = async (itemVerse: QuranVerse) => {
+    const levelNumber = await AsyncStorage.getItem("levelSound");
+
+    let soundArr: QuranVerse[] = [];
+
+    // Logic for different levels
+    if (levelNumber === "1") {
+      // Level 1: Only the pressed object's path
+      soundArr = dataPage.filter(
+        (item) => item.id === itemVerse.id && item.audio_url
+      );
+    } else if (levelNumber === "2") {
+      soundArr = dataPage.filter(
+        (item) =>
+          (item.id === itemVerse.id || item.id === itemVerse.id + 1) &&
+          item.audio_url
+      );
+    } else if (levelNumber === "3") {
+      // Level 3: All words that share the same verse_id
+      soundArr = dataPage.filter(
+        (item) => item.verse_id === itemVerse.verse_id && item.audio_url
+      );
+    }
+
+    setSoundsPlayingArr([...soundArr]);
+
+    await listenHandler(itemVerse, dataPage, pageNumber);
+
+    setSoundsPlayingArr([]);
+  };
+
   return (
     <View style={styles.container}>
       {lineNumbers.map((lineNumber) => {
@@ -44,7 +84,15 @@ const PageQuran = ({
         return (
           <View key={lineNumber} style={styles.lineContainer}>
             {verses.map((item) => (
-              <VerseText key={item.id} item={item} pageNumber={pageNumber} />
+              <VerseText
+                key={item.id}
+                item={item}
+                pageNumber={pageNumber}
+                listenHandler={handleListen}
+                backgroundColor={
+                  soundsPlayingArr.includes(item) ? "yellow" : "white"
+                }
+              />
             ))}
           </View>
         );
@@ -64,7 +112,8 @@ const styles = StyleSheet.create({
   lineContainer: {
     flexDirection: "row-reverse",
     width: "100%",
-    justifyContent: "space-between",
+    justifyContent: "center",
+    // backgroundColor: "yellow",
   },
   customText: {
     fontSize: 17,

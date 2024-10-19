@@ -1,9 +1,7 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { StyleSheet, View, FlatList, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import TextReg from "../Texts/TextReg";
-import TextBold from "../Texts/TextBold";
 import { surahsData } from "../IndexModal/utils/surahData";
 
 type IndexModalProps = {
@@ -17,7 +15,6 @@ const SurahsModal = ({
   setModalVisible,
   goToPage,
 }: IndexModalProps) => {
-  // Use useCallback to avoid re-creating the function
   const handleIndexButton = useCallback(
     (item: number) => {
       goToPage(item);
@@ -26,90 +23,67 @@ const SurahsModal = ({
     [goToPage, setModalVisible]
   );
 
-  const renderSurahItem = useCallback(
-    ({
-      item,
-    }: {
-      item: {
-        id: number;
-        revelation_place: string;
-        name_arabic: string;
-        start_page: number;
-        end_page: number;
-        verses_count: number;
-      };
-    }) => (
-      <TouchableOpacity
-        style={styles.listItem}
-        onPress={() => handleIndexButton(item.start_page)}
-      >
-        <View className="items-center">
-          <TextReg styles="mr-2 font-bold">{item.name_arabic}</TextReg>
-          <TextReg styles="mr-2 font-bold">
-            <>
-              {item.end_page.toString()} - {item.start_page.toString()}
-            </>
-          </TextReg>
+  const renderItem = useCallback(
+    ({ item }: { item: { start_page: number; name_arabic: string } }) => (
+      <TouchableOpacity onPress={() => handleIndexButton(item.start_page)}>
+        <View style={styles.listItem}>
+          <TextReg>{item.start_page.toString()}</TextReg>
+          <TextReg>{item.name_arabic}</TextReg>
         </View>
-        <MaterialCommunityIcons
-          name="book-open-page-variant"
-          size={24}
-          color="#34a853"
-        />
       </TouchableOpacity>
     ),
     [handleIndexButton]
   );
 
+  // Memoized keyExtractor function
+  const keyExtractor = useCallback(
+    (_: { start_page: number; name_arabic: string }, index: number) =>
+      index.toString(),
+    []
+  );
 
-const renderItem = ({ item }) => (
-  <TouchableOpacity onPress={() => handleIndexButton(item.start_page)}>
-    <View >
-      <View style={styles.listItem}>
-        <TextReg>{item.start_page}</TextReg>
-        <TextReg>{item.name_arabic}</TextReg>
-      </View>
-    </View>
-  </TouchableOpacity>
+  // Memoize surahsData for performance, assuming it's static data
+  const memoizedSurahsData = useMemo(() => surahsData, []);
 
-
-  ); return (
+  return (
     <Modal
       isVisible={modalVisible}
-    animationIn="slideInRight" 
-  animationOut="slideOutRight"
+      animationIn="slideInRight"
+      animationOut="slideOutRight"
       backdropOpacity={0.5}
       onBackdropPress={() => setModalVisible(false)}
       style={styles.modalContainer}
     >
       <View style={styles.modalContent}>
         <View style={styles.modalHeader}>
-        <TextReg >رقم الصفحة</TextReg>
-          <TextReg >السورة</TextReg>
+          <TextReg>رقم الصفحة</TextReg>
+          <TextReg>السورة</TextReg>
         </View>
         <FlatList
-          data={surahsData}
+          data={memoizedSurahsData}
           renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={keyExtractor}
+          initialNumToRender={10} // Render 10 items initially for smoother performance
+          maxToRenderPerBatch={10} // Batch render 10 items at a time
+          windowSize={5} // Reduce memory usage by keeping 5 windows in the FlatList
         />
       </View>
     </Modal>
   );
-  };
-  
-  export default SurahsModal;
-  const styles = StyleSheet.create({
+};
+
+export default SurahsModal;
+
+const styles = StyleSheet.create({
   modalContainer: {
     margin: 0,
     display: "flex",
-   
-    width: "70%",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
+    width: "100%",
     marginBottom: "auto",
+    alignItems: "flex-end",
   },
   modalContent: {
-    width: "100%",
+    width: "70%",
     height: "100%",
     backgroundColor: "white",
     display: "flex",
