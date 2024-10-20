@@ -97,6 +97,8 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: "white",
     display: "flex",
+     borderRightWidth:5,
+    borderRightColor:"#34a853"
   },
   listItem: {
     padding: 15,

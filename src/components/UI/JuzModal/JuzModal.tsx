@@ -83,12 +83,22 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     width: 300,
     marginBottom: "auto",
+   
   },
   modalContent: {
     width: "100%",
     height: "100%",
     backgroundColor: "white",
     display: "flex",
+    borderRightWidth:5,
+    borderRightColor:"#34a853"
+  },
+  listSection: {
+    flex: 1,
+    borderBottomWidth: 2,
+    borderBottomColor: "#34a853",
+ 
+    marginTop: 10,
   },
   listItem: {
     padding: 15,
