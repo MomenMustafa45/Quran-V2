@@ -62,7 +62,7 @@ const TabsNavigation = ({ setModalSearch }: TabsNavigationProp) => {
   }, []);
 
   return (
-    <View className="mt-auto w-full flex flex-row justify-center items-center px-5 py-3">
+    <View className="mt-auto w-full flex flex-row justify-center items-center px-5 py-3 h-14">
       <View className="flex-row flex-1 justify-around">
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
           <MaterialCommunityIcons

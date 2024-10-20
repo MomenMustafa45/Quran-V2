@@ -13,6 +13,9 @@ const useFonts = async (fontNames: string[]) => {
       case "Cairo-SemiBold":
         fontsToLoad.cairoSemiBold = require("../../assets/fonts/CairoSemiBold.ttf");
         break;
+      case "QCF-BSML":
+        fontsToLoad.surahNames = require("../../assets/fonts/QCF-BSML.ttf");
+        break;
 
       case "QCF-1":
         fontsToLoad["QCF-1"] = require("../../assets/quran-fonts/QCF2001.ttf");

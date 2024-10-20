@@ -10,7 +10,12 @@ export default function App() {
   const [isReady, setIsReady] = useState(false);
 
   const loadResourcesAsync = async () => {
-    await useFonts(["Cairo-Regular", "Cairo-Bold", "Cairo-SemiBold"]);
+    await useFonts([
+      "Cairo-Regular",
+      "Cairo-Bold",
+      "Cairo-SemiBold",
+      "QCF-BSML",
+    ]);
   };
 
   useEffect(() => {

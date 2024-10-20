@@ -1,5 +1,11 @@
 import React, { useCallback, useMemo } from "react";
-import { StyleSheet, View, FlatList, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 import Modal from "react-native-modal";
 import TextReg from "../Texts/TextReg";
 import { surahsData } from "../IndexModal/utils/surahData";
@@ -24,11 +30,15 @@ const SurahsModal = ({
   );
 
   const renderItem = useCallback(
-    ({ item }: { item: { start_page: number; name_arabic: string } }) => (
+    ({
+      item,
+    }: {
+      item: { start_page: number; name_arabic: string; name_code: string };
+    }) => (
       <TouchableOpacity onPress={() => handleIndexButton(item.start_page)}>
         <View style={styles.listItem}>
           <TextReg>{item.start_page.toString()}</TextReg>
-          <TextReg>{item.name_arabic}</TextReg>
+          <Text style={{ fontFamily: "surahNames" }}>{item.name_code}</Text>
         </View>
       </TouchableOpacity>
     ),
