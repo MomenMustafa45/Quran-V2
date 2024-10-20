@@ -1,43 +1,33 @@
-// getting words verses and audios
 import * as FileSystem from "expo-file-system";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { WordVerseType } from "../lib/types/localVerseAndWordType";
 
 // Helper to set the last downloaded page
 const setLastDownloadedPage = async (pageNumber: number) => {
   await AsyncStorage.setItem("lastDownloadedAudio", pageNumber.toString());
 };
 
+// Helper to get the last downloaded page
+const getLastDownloadedPage = async () => {
+  const lastDownloaded = await AsyncStorage.getItem("lastDownloadedAudio");
+  return lastDownloaded ? parseInt(lastDownloaded) : null;
+};
+
 export const fetchAndDownloadAudioForAllPages = async ({
   setIsLoadingAudios,
-  setProgressAudio,
   TOTAL_PAGES,
   startPage,
 }: {
   TOTAL_PAGES: number;
   setIsLoadingAudios: (isLoaded: boolean) => void;
-  setProgressAudio: (currentNum: number) => void;
   startPage: number;
 }) => {
   setIsLoadingAudios(true);
 
   try {
-    let wordsVersesData: any[] = []; // Store words from all pages
-    let audioUris: string[] = []; // Store local audio paths
-
-    // Retrieve previously stored data
-    const storedWordsVerses = await AsyncStorage.getItem("wordsVerses");
-    if (storedWordsVerses) {
-      wordsVersesData = JSON.parse(storedWordsVerses); // Load existing words and verses data
-    }
-
-    // Get the last downloaded page from storage
-    const lastDownloadedPage = startPage;
-
-    // Start from the last downloaded page
+    // Start downloading from the last downloaded page or startPage
     for (
-      let pageNumber = lastDownloadedPage;
-      pageNumber <= lastDownloadedPage + TOTAL_PAGES;
+      let pageNumber = startPage;
+      pageNumber < startPage + TOTAL_PAGES;
       pageNumber++
     ) {
       const apiUrl = `https://quran.moaddi.org/hafs/all_apis/listen_level_1?page_number=${pageNumber}`;
@@ -52,106 +42,64 @@ export const fetchAndDownloadAudioForAllPages = async ({
 
         // Download the audio file if it exists
         if (audioUrl) {
-          const audioPath = `${FileSystem.documentDirectory}/w${word.id}-v${word.verse_id}`;
+          const audioPath = `${FileSystem.documentDirectory}/w${word.id}-v${word.verse_id}-p${word.page_number}.mp3`;
           const fileInfo = await FileSystem.getInfoAsync(audioPath);
-          console.log(audioPath);
 
           if (!fileInfo.exists) {
-            // Download the audio file
+            // If audio doesn't exist, download and save it
             await FileSystem.downloadAsync(audioUrl, audioPath);
+            console.log(`Downloaded audio for word ${word.id}: ${audioPath}`);
+          } else {
+            console.log(
+              `Audio already exists for word ${word.id}: ${audioPath}`
+            );
           }
-
-          // Add the local audio path to the word data
-          word.local_audio_path = audioPath;
-          audioUris.push(audioPath); // Store the audio URI
         }
-
-        // Add the word (with or without audio) to the data array
-        wordsVersesData.push(word);
-
-        // Update progress
-        const currentProgress =
-          (pageNumber - 1 + (i + 1) / wordsData.length) /
-          (lastDownloadedPage + TOTAL_PAGES);
-        setProgressAudio(currentProgress);
       }
-
-      // Save the updated words data from each page periodically
-      await AsyncStorage.setItem(
-        "wordsVerses",
-        JSON.stringify(wordsVersesData) // Save combined data (old + new)
-      );
 
       // Save the current page as the last successfully downloaded page
       await setLastDownloadedPage(pageNumber);
     }
-    const wordsData = await loadWordsAndAudio({ pageNumber: startPage });
 
     setIsLoadingAudios(false);
-    await AsyncStorage.removeItem("lastDownloadedAudio"); // Clear this if no resume is needed
-    console.log("All words and audio files have been saved successfully.");
-    return wordsData;
+    await AsyncStorage.removeItem("lastDownloadedAudio"); // Clear if resumption is not needed
+    console.log("All audio files have been downloaded successfully.");
   } catch (error) {
     console.error("Error fetching or downloading audio data: ", error);
     setIsLoadingAudios(false);
   }
 };
 
-// Load offline words and audio data
-export const loadWordsAndAudio = async ({
-  pageNumber,
-}: {
-  pageNumber: number;
-}) => {
-  try {
-    const wordsVersesData = await AsyncStorage.getItem("wordsVerses");
-    if (wordsVersesData) {
-      const parsedData = JSON.parse(wordsVersesData);
-
-      const wantedDate = parsedData.filter(
-        (item: WordVerseType) => item.page_number == pageNumber
-      );
-
-      return wantedDate;
-    } else {
-      console.log("No words and audio data found.");
-      return [];
-    }
-  } catch (error) {
-    console.error("Error loading words and audio data: ", error);
-    return [];
-  }
-};
-
+// Function to check for existing downloaded audios
 export const checkForDownloadedAudio = async ({
   setIsLoadingAudios,
-  setProgressAudio,
   TOTAL_PAGES,
   startPage,
 }: {
   TOTAL_PAGES: number;
   setIsLoadingAudios: (isLoaded: boolean) => void;
-  setProgressAudio: (currentNum: number) => void;
   startPage: number;
 }) => {
   setIsLoadingAudios(true);
 
   try {
-    const downloadedAudioData = await AsyncStorage.getItem("wordsVerses");
-    if (downloadedAudioData) {
-      const parsedData = JSON.parse(downloadedAudioData);
-      const downloadedAudioUris = parsedData.map(
-        (word: any) => word.local_audio_path
-      );
+    const lastDownloadedPage = await getLastDownloadedPage();
 
-      // If all audio is downloaded, set the local audio URIs and verses
-      setIsLoadingAudios(false);
-    } else {
-      // If no audio found in AsyncStorage, fetch and download them
-      console.log("No downloaded audio found. Fetching audio...");
+    // If lastDownloadedPage exists, skip fetching and resume from there
+    if (lastDownloadedPage) {
+      console.log(`Resuming audio download from page ${lastDownloadedPage}`);
       await fetchAndDownloadAudioForAllPages({
         setIsLoadingAudios,
-        setProgressAudio,
+        TOTAL_PAGES,
+        startPage: lastDownloadedPage,
+      });
+    } else {
+      // No previously downloaded audio found, start fresh
+      console.log(
+        "No downloaded audio found. Starting download from the first page."
+      );
+      await fetchAndDownloadAudioForAllPages({
+        setIsLoadingAudios,
         TOTAL_PAGES,
         startPage,
       });
@@ -161,5 +109,3 @@ export const checkForDownloadedAudio = async ({
     setIsLoadingAudios(false);
   }
 };
-
-// getting words verses and audios

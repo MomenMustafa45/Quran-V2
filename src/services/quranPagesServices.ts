@@ -3,11 +3,6 @@ import * as FileSystem from "expo-file-system";
 const TOTAL_PAGES = 604; // Total number of Quran pages
 const DIRECTORY_PATH = `${FileSystem.documentDirectory}quran_pages/`; // Directory to store pages
 
-/**
- * Download and save the Quran page data as JSON files in the filesystem.
- * One file per page will be created, e.g., page_1.json, page_2.json, etc.
- * It returns an array of paths, where each path corresponds to the file path for a specific page.
- */
 export const fetchAndStoreQuranPages = async () => {
   try {
     // Check if the directory exists, if not, create it
@@ -49,10 +44,6 @@ export const fetchAndStoreQuranPages = async () => {
   }
 };
 
-/**
- * Fetch the Quran data for a single page from the API.
- * @param page The page number to fetch data for.
- */
 const fetchQuranPageData = async (page: number) => {
   try {
     const response = await fetch(

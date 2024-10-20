@@ -35,7 +35,7 @@ const Bookmark = () => {
           ListEmptyComponent={<Text>No bookmarks found</Text>} // Display a message if no bookmarks
         />
       </View>
-      <TabsNavigation />
+      <TabsNavigation setModalSearch={() => {}} />
     </>
   );
 };
