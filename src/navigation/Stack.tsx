@@ -16,6 +16,11 @@ const Stack = createStackNavigator();
 function StackNavigation() {
   return (
     <Stack.Navigator>
+       <Stack.Screen
+        name="Landing"
+        component={LandingScreen}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name="Splash"
         component={Splash}
@@ -26,11 +31,7 @@ function StackNavigation() {
         component={DrawerNavigation}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="Landing"
-        component={LandingScreen}
-        options={{ headerShown: false }}
-      />
+      
     </Stack.Navigator>
   );
 }
