@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import StackNavigation from "./src/navigation/Stack";
 import useFonts from "./src/hooks/useFonts";
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { ActivityIndicator, View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ActivityIndicator, StatusBar, View } from "react-native";
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
@@ -40,11 +39,11 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar style="auto" />
+    <SafeAreaProvider style={{ flex: 1 }}>
+      <StatusBar />
       <NavigationContainer>
         <StackNavigation />
       </NavigationContainer>
-    </SafeAreaView>
+    </SafeAreaProvider>
   );
 }

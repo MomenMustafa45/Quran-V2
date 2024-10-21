@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import TextSemiBold from "../Texts/TextSemiBold";
 import { RootNavigationParamList } from "../../../navigation/Stack";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { surahsData } from "../IndexModal/utils/surahData";
 
 const LEVEL_SOUND_KEY = "levelSound";
 const MAX_LEVEL = 3;
@@ -14,9 +15,13 @@ type TabsNavigationProps = DrawerNavigationProp<RootNavigationParamList>;
 
 type TabsNavigationProp = {
   setModalSearch: () => void;
+  indexOfPage: number;
 };
 
-const TabsNavigation = ({ setModalSearch }: TabsNavigationProp) => {
+const TabsNavigation = ({
+  setModalSearch,
+  indexOfPage,
+}: TabsNavigationProp) => {
   const [levelSound, setLevelSound] = useState("1");
   const navigation = useNavigation<TabsNavigationProps>();
   const route = useRoute();
@@ -89,7 +94,7 @@ const TabsNavigation = ({ setModalSearch }: TabsNavigationProp) => {
         </TouchableOpacity>
       </View>
       {/* search */}
-      <View>
+      {/* <View>
         <TouchableOpacity onPress={setModalSearch}>
           <Feather
             name="search"
@@ -97,10 +102,12 @@ const TabsNavigation = ({ setModalSearch }: TabsNavigationProp) => {
             color={route.name === "Bookmark" ? "#159C3E" : "#8789A3"}
           />
         </TouchableOpacity>
-      </View>
+      </View> */}
       {/* search */}
 
-      <View className="flex-1">
+      <View className="flex-1 flex-row items-center justify-between">
+        <Text>سورة {surahsData[603 - indexOfPage].name_arabic}</Text>
+        <Text>الجزء الاول</Text>
         <TouchableOpacity
           className="flex items-center text"
           onPress={handlePressLevel}

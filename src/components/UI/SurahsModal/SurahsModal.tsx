@@ -70,6 +70,7 @@ const SurahsModal = ({
           <TextReg>السورة</TextReg>
         </View>
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={memoizedSurahsData}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
@@ -97,8 +98,6 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: "white",
     display: "flex",
-     borderRightWidth:5,
-    borderRightColor:"#34a853"
   },
   listItem: {
     padding: 15,
@@ -107,6 +106,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderBottomWidth: 1,
     borderBottomColor: "#34a853",
+    borderLeftWidth: 5,
+    borderLeftColor: "#34A853",
   },
   modalHeader: {
     flexDirection: "row",

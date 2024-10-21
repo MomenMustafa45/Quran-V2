@@ -4,6 +4,7 @@ import TextBold from "../components/UI/Texts/TextBold";
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { RootNavigationParamList } from "../navigation/Stack";
 import { StackNavigationProp } from "@react-navigation/stack";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type SplashScreenNavigationProp = StackNavigationProp<
   RootNavigationParamList,
@@ -16,8 +17,25 @@ const Splash = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
+  const getMoshafSelected = async () => {
+    try {
+      const selectedMoshaf = await AsyncStorage.getItem("mohsaf");
+      if (selectedMoshaf) {
+        navigate.dispatch(
+          CommonActions.reset({ index: 0, routes: [{ name: "Drawer" }] })
+        );
+      } else {
+        navigate.dispatch(
+          CommonActions.reset({ index: 0, routes: [{ name: "Landing" }] })
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    Animated.parallel([
+    const isMoshafSelected = Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 2000,

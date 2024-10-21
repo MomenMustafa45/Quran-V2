@@ -5,6 +5,8 @@ import {
   ActivityIndicator,
   FlatList,
   Text,
+  Image,
+  ImageBackground,
 } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import TabsNavigation from "../components/UI/TabsNavigation/TabsNavigation";
@@ -26,6 +28,7 @@ import { fetchAndStoreQuranPages } from "../services/quranPagesServices";
 import * as FileSystem from "expo-file-system";
 import SearchModal from "../components/UI/SearchModal/SearchModal";
 import { QuranVerse } from "../lib/types/quranWordType";
+import frameImg from "../../assets/images/frame-mohaf3.png";
 
 const width = Dimensions.get("window").width;
 
@@ -239,7 +242,29 @@ const Home = () => {
         setModalVisibleSurah={() => setSurahModal(true)}
         bookmarkHandler={() => handleBookmark(currentIndex)}
       />
-      <View style={styles.container}>
+      <ImageBackground
+        source={frameImg}
+        resizeMode="stretch"
+        style={styles.container}
+      >
+        {/* <View
+          style={{
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            top: 0,
+            left: 0,
+            zIndex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Image
+            source={frameImg}
+            style={{ width: "100%", height: "100%", resizeMode: "stretch" }}
+          />
+        </View> */}
         {isGettingMoreAudios && (
           <View style={styles.audioLoading}>
             <ActivityIndicator size="small" color="#fff" />
@@ -269,7 +294,7 @@ const Home = () => {
           })}
           initialScrollIndex={quranPagesPaths.length - 1}
         />
-      </View>
+      </ImageBackground>
 
       <JuzModal
         goToPage={scrollToIndex}
@@ -286,7 +311,10 @@ const Home = () => {
         modalVisible={modalVisibleSearch}
         setModalVisible={setModalVisibleSearch}
       />
-      <TabsNavigation setModalSearch={() => setModalVisibleSearch(true)} />
+      <TabsNavigation
+        setModalSearch={() => setModalVisibleSearch(true)}
+        indexOfPage={currentIndex}
+      />
     </>
   );
 };
@@ -296,8 +324,8 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
     direction: "rtl",
+    position: "relative",
   },
   loadingContainer: {
     flex: 1,
@@ -305,11 +333,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   audioLoading: {
+    position: "absolute",
     width: "100%",
-    backgroundColor: "#159C3E",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    zIndex: 40,
+    top: -16,
   },
   pageContainer: {
     width,

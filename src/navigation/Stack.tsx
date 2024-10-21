@@ -9,6 +9,7 @@ export type RootNavigationParamList = {
   Home: undefined;
   Bookmark: undefined;
   Settings: undefined;
+  Drawer: undefined;
 };
 
 const Stack = createStackNavigator();
@@ -16,22 +17,22 @@ const Stack = createStackNavigator();
 function StackNavigation() {
   return (
     <Stack.Navigator>
-       <Stack.Screen
-        name="Landing"
-        component={LandingScreen}
-        options={{ headerShown: false }}
-      />
       <Stack.Screen
         name="Splash"
         component={Splash}
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        name="Landing"
+        component={LandingScreen}
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
         name="Drawer"
         component={DrawerNavigation}
         options={{ headerShown: false }}
       />
-      
     </Stack.Navigator>
   );
 }

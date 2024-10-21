@@ -1,11 +1,19 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 import React from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { RootNavigationParamList } from "../navigation/Stack";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const LandingScreen = () => {
-type TabsNavigationProps = DrawerNavigationProp<RootNavigationParamList>;
+  type TabsNavigationProps = DrawerNavigationProp<RootNavigationParamList>;
 
   const navigation = useNavigation<TabsNavigationProps>();
 
@@ -14,64 +22,86 @@ type TabsNavigationProps = DrawerNavigationProp<RootNavigationParamList>;
       id: "2",
       text: "مصحف المدينة شعبة",
       image: require("../../assets/images/LandingImages/Mushaf_AlMadinah-Shopaa.png"),
+      downloadMoshaf: true,
     },
 
     {
       id: "1",
       text: "مصحف المدينة حفص",
       image: require("../../assets/images/LandingImages/Mushaf_AlMadinah-Hafs.png"),
+      downloadMoshaf: false,
     },
     {
       id: "4",
       text: "مصحف المدينة أردو",
       image: require("../../assets/images/LandingImages/Mushaf_AlMadinah-Ordo.png"),
+      downloadMoshaf: false,
     },
 
     {
       id: "3",
       text: "مصحف المدينة الدوري",
       image: require("../../assets/images/LandingImages/Mushaf_AlMadinah-Dory.png"),
+      downloadMoshaf: false,
     },
     {
       id: "6",
       text: "مصحف المدينة ورش",
       image: require("../../assets/images/LandingImages/Mushaf_AlMadinah_Warsh.png"),
+      downloadMoshaf: false,
     },
 
     {
       id: "5",
       text: "مصحف المدينة قالون",
       image: require("../../assets/images/LandingImages/Mushaf_AlMadinah-Qalon.png"),
+      downloadMoshaf: false,
     },
   ];
 
+  const handleNavigateToHome = async () => {
+    try {
+      await AsyncStorage.setItem("mohsaf", "madena");
+      navigation.navigate("Drawer");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        {imagesData.map((item) => (
+    <View style={{ flex: 1 }}>
+      <FlatList
+        data={imagesData}
+        numColumns={2}
+        ItemSeparatorComponent={() => (
+          <View style={{ height: 20, width: 10 }} />
+        )}
+        columnWrapperStyle={{ justifyContent: "space-between" }}
+        renderItem={({ item }) => (
           <TouchableOpacity
             key={item.id}
-           onPress={() => navigation.navigate("Home")}
+            onPress={handleNavigateToHome}
             accessibilityLabel={`مصحف ${item.text}`}
+            style={{ width: "49%" }}
           >
             <View style={styles.card}>
               <Image source={item.image} style={styles.cardImage} />
               <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>
-                  {item.text}
-                  {/* <TouchableOpacity >
-                  <Image
-                    style={styles.smallImg}
-                    source={require("../../assets/images/LandingImages/cloud-download 1.png")}
-                  />
-                </TouchableOpacity> */}
-                </Text>
+                {!item.downloadMoshaf && (
+                  <TouchableOpacity>
+                    <Image
+                      style={styles.smallImg}
+                      source={require("../../assets/images/LandingImages/cloud-download 1.png")}
+                    />
+                  </TouchableOpacity>
+                )}
+                <Text style={styles.cardTitle}>{item.text}</Text>
               </View>
             </View>
           </TouchableOpacity>
-        ))}
-      </View>
-    </ScrollView>
+        )}
+      />
+    </View>
   );
 };
 
@@ -85,6 +115,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     justifyContent: "space-between",
   },
+
   card: {
     backgroundColor: "#f9f9f9",
     borderTopStartRadius: 10,
@@ -94,19 +125,24 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     overflow: "hidden",
     elevation: 5,
-    width: "100%",  
+    width: "100%",
   },
   cardImage: {
     width: "100%",
-    height: 200,  
-    resizeMode: "contain", 
+    height: 200,
+    resizeMode: "contain",
   },
   cardContent: {
+    display: "flex",
+    flexDirection: "row",
     padding: 15,
+    alignItems: "center",
+    justifyContent: "center",
   },
   cardTitle: {
     fontSize: 16,
     fontWeight: "bold",
+    display: "flex",
   },
   smallImg: {
     width: 20,

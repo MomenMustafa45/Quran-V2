@@ -126,29 +126,67 @@ const PageQuran = ({
   // console.log(output.length);
 
   // return null;
+
   return (
     <View style={styles.container}>
-      {output.map((line, index) => {
+      {output.map((line: any, index) => {
         return (
           <View key={index} style={styles.lineContainer}>
             {line[0].header ? (
-              <Text
-                style={{ backgroundColor: "red", fontFamily: "surahNames" }}
+              <View
+                style={{
+                  position: "relative",
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  display: "flex",
+                }}
               >
-                {line[0].name_code}
-              </Text>
+                <Text
+                  style={{
+                    fontFamily: "surahNames",
+                    fontSize: 24,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  ò
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: "surahNames",
+                    fontSize: 17,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    position: "absolute",
+                    top: "25%",
+                  }}
+                >
+                  {line[0].name_code} \
+                </Text>
+              </View>
             ) : line[0].bismillah ? (
-              <Text>bismillah</Text>
+              <Text
+                style={{
+                  fontFamily: "surahNames",
+                  fontSize: 17,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                ó
+              </Text>
             ) : (
-              line.map((item, index) => (
+              line.map((item: any, index: number) => (
                 <VerseText
                   key={index}
                   item={item}
                   pageNumber={pageNumber}
                   listenHandler={handleListen}
-                  backgroundColor={
-                    soundsPlayingArr.includes(item) ? "yellow" : "white"
-                  }
+                  color={soundsPlayingArr.includes(item) ? "yellow" : "black"}
                 />
               ))
             )}
@@ -163,19 +201,19 @@ export default PageQuran;
 
 const styles = StyleSheet.create({
   container: {
+    position: "relative",
     flex: 1,
-    backgroundColor: "#fff",
     justifyContent: "space-between",
+    zIndex: 1000,
   },
   lineContainer: {
+    position: "relative",
     flexDirection: "row-reverse",
     width: "100%",
     justifyContent: "center",
-    // backgroundColor: "yellow",
-    height: (heightDimension - 56 - 56 - 20) / 15,
+    height: (heightDimension - 56 - 56) / 15,
     alignItems: "center",
-
-    borderBottomWidth: 1,
+    zIndex: 100,
   },
   customText: {
     fontSize: 17,
