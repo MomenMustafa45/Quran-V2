@@ -32,13 +32,18 @@ const SurahsModal = ({
   const renderItem = useCallback(
     ({
       item,
+      index 
     }: {
       item: { start_page: number; name_arabic: string; name_code: string };
     }) => (
       <TouchableOpacity onPress={() => handleIndexButton(item.start_page)}>
         <View style={styles.listItem}>
           <TextReg>{item.start_page.toString()}</TextReg>
+          <View className="flex-row">
           <Text style={{ fontFamily: "surahNames" }}>{item.name_code}</Text>
+          <Text>.{index+1}</Text>
+
+          </View>
         </View>
       </TouchableOpacity>
     ),
@@ -66,8 +71,8 @@ const SurahsModal = ({
     >
       <View style={styles.modalContent}>
         <View style={styles.modalHeader}>
-          <TextReg>رقم الصفحة</TextReg>
-          <TextReg>السورة</TextReg>
+          <TextReg styles="text-white">رقم الصفحة</TextReg>
+          <TextReg styles="text-white">السورة</TextReg>
         </View>
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -100,7 +105,6 @@ const styles = StyleSheet.create({
     display: "flex",
   },
   listItem: {
-    padding: 15,
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -113,7 +117,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     backgroundColor: "#34A853",
-    height: 50,
+    height: 40,
     padding: 10,
   },
 });

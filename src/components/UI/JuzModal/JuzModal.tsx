@@ -26,17 +26,16 @@ const JuzModal = ({
 
   // Memoize the renderItem function to avoid unnecessary re-renders
   const renderItem = useCallback(
-    ({ item }: { item: { startPage: number; title: string } }) => (
+    ({ item,index }: { item: { startPage: number; title: string } }) => (
       <TouchableOpacity onPress={() => handleIndexButton(item.startPage)}>
         <View style={styles.listItem}>
           <TextReg>{item.startPage.toString()}</TextReg>
-          <TextReg>{item.title}</TextReg>
+          <TextReg><>{index+1}.{item.title}</></TextReg>
         </View>
       </TouchableOpacity>
     ),
     [handleIndexButton]
   );
-
   // Memoized keyExtractor to avoid re-creating it
   const keyExtractor = useCallback(
     (_: {}, index: number) => index.toString(),
@@ -57,8 +56,8 @@ const JuzModal = ({
     >
       <View style={styles.modalContent}>
         <View style={styles.modalHeader}>
-          <TextReg>رقم الصفحة</TextReg>
-          <TextReg>الجزء</TextReg>
+          <TextReg styles="text-white">رقم الصفحة</TextReg>
+          <TextReg styles="text-white">الجزء</TextReg>
         </View>
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -98,7 +97,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   listItem: {
-    padding: 15,
+    padding: 4,
     borderBottomWidth: 1,
     borderBottomColor: "#34a853",
     alignItems: "center",
@@ -107,13 +106,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderRightWidth: 5,
     borderRightColor: "#34a853",
+  
   },
   modalHeader: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     backgroundColor: "#34A853",
-    height: 50,
     padding: 10,
+    height: 40,
+    
   },
 });
