@@ -7,7 +7,6 @@ import {
   FlatList,
 } from "react-native";
 import React from "react";
-import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { RootNavigationParamList } from "../navigation/Stack";
 import { DrawerNavigationProp } from "@react-navigation/drawer";

@@ -4,8 +4,6 @@ import {
   StyleSheet,
   ActivityIndicator,
   FlatList,
-  Text,
-  Image,
   ImageBackground,
 } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
@@ -15,7 +13,6 @@ import {
   checkForDownloadedAudio,
   fetchAndDownloadAudioForAllPages,
 } from "../services/audioServices";
-import { WordVerseType } from "../lib/types/localVerseAndWordType";
 import CustomDrawerHeader from "../components/UI/CustomDrawerHeader/CustomDrawerHeader";
 import { saveBookmark } from "../services/bookmarkServices";
 import { useRoute } from "@react-navigation/native";
@@ -34,10 +31,10 @@ const width = Dimensions.get("window").width;
 
 const Home = () => {
   const [quranPagesPaths, setQuranPagesPaths] = useState<string[]>([]);
-  const [wordsVerses, setWordsVerses] = useState<WordVerseType[]>([]);
   const [pageData, setPageData] = useState<Record<string, any>>({});
   const [isLoadingImages, setIsLoadingImages] = useState(true);
   const [isGettingMoreAudios, setIsGettingMoreAudios] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const [surahModal, setSurahModal] = useState(false);
   const [juzModal, setJuzModal] = useState(false);
@@ -46,7 +43,6 @@ const Home = () => {
   const flatListRef = useRef<FlatList>(null);
   const { params }: any = useRoute();
 
-  let currentIndex = quranPagesPaths.length - 1;
   const getTheDataFromPath = useCallback(async (path: string) => {
     try {
       const pageData = await FileSystem.readAsStringAsync(path);
@@ -80,9 +76,6 @@ const Home = () => {
   }, [getTheDataFromPath]);
 
   useEffect(() => {
-    if (wordsVerses?.length === 0) {
-      // getTheData(1);
-    }
     checkForDownloadedAudio({
       setIsLoadingAudios: setIsGettingMoreAudios,
       startPage: 1,
@@ -108,7 +101,11 @@ const Home = () => {
         viewPosition: 0.5,
       });
     }
-    // getTheData(index);
+    const pagePath = quranPagesPaths[604 - index];
+
+    const currentPageData = pageData[pagePath];
+    setCurrentIndex(currentPageData[0].chapter_id);
+    console.log(currentIndex);
   }, []);
 
   const listenHandler = useCallback(
@@ -283,9 +280,14 @@ const Home = () => {
           initialNumToRender={5}
           maxToRenderPerBatch={15}
           windowSize={5}
-          onMomentumScrollEnd={async (event) => {
+          onMomentumScrollEnd={(event) => {
             const index = Math.floor(event.nativeEvent.contentOffset.x / width);
-            currentIndex = index;
+
+            const pagePath = quranPagesPaths[index];
+            console.log(quranPagesPaths[index]);
+
+            const currentPageData = pageData[pagePath];
+            setCurrentIndex(currentPageData[0].chapter_id);
           }}
           getItemLayout={(data, index) => ({
             length: width,

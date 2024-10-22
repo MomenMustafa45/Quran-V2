@@ -15,7 +15,7 @@ type TabsNavigationProps = DrawerNavigationProp<RootNavigationParamList>;
 
 type TabsNavigationProp = {
   setModalSearch: () => void;
-  indexOfPage: number;
+  indexOfPage?: number;
 };
 
 const TabsNavigation = ({
@@ -66,6 +66,8 @@ const TabsNavigation = ({
     })();
   }, []);
 
+  // console.log(surahsData[indexOfPage], indexOfPage, "from bottom");
+
   return (
     <View className="mt-auto w-full flex flex-row justify-center items-center px-5 py-3 h-14">
       <View className="flex-row flex-1 justify-around">
@@ -76,7 +78,6 @@ const TabsNavigation = ({
             color={route.name === "Home" ? "#159C3E" : "#8789A3"}
           />
         </TouchableOpacity>
-
         <TouchableOpacity>
           <Feather
             name="settings"
@@ -84,7 +85,6 @@ const TabsNavigation = ({
             color={route.name === "Settings" ? "#159C3E" : "#8789A3"}
           />
         </TouchableOpacity>
-
         <TouchableOpacity onPress={() => navigation.navigate("Bookmark")}>
           <Feather
             name="bookmark"
@@ -93,21 +93,17 @@ const TabsNavigation = ({
           />
         </TouchableOpacity>
       </View>
-      {/* search */}
-      {/* <View>
-        <TouchableOpacity onPress={setModalSearch}>
-          <Feather
-            name="search"
-            size={24}
-            color={route.name === "Bookmark" ? "#159C3E" : "#8789A3"}
-          />
-        </TouchableOpacity>
-      </View> */}
-      {/* search */}
 
       <View className="flex-1 flex-row items-center justify-between">
-        <Text>سورة {surahsData[603 - indexOfPage].name_arabic}</Text>
-        <Text>الجزء الاول</Text>
+        {/* <View className=""> */}
+        <Text style={{ fontFamily: "surahNames", textAlign: "center" }}>
+          {surahsData[indexOfPage ? indexOfPage - 1 : 0]?.name_code} \
+        </Text>
+        <Text style={{ fontFamily: "surahNames", textAlign: "center" }}>
+          ﰸ ﰹ
+        </Text>
+        {/* </View> */}
+
         <TouchableOpacity
           className="flex items-center text"
           onPress={handlePressLevel}
