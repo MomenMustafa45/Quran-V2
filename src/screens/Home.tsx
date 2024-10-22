@@ -104,8 +104,12 @@ const Home = () => {
     const pagePath = quranPagesPaths[604 - index];
 
     const currentPageData = pageData[pagePath];
-    setCurrentIndex(currentPageData[0].chapter_id);
-    console.log(currentIndex);
+
+    if (currentPageData) {
+      setCurrentIndex(currentPageData[0].chapter_id);
+    } else {
+      setCurrentIndex(0);
+    }
   }, []);
 
   const listenHandler = useCallback(
@@ -155,8 +159,6 @@ const Home = () => {
                   `file:///data/user/0/host.exp.exponent/files//w${item.id}-v${item.verse_id}-p${item.page_number}.mp3`
               );
           }
-
-          console.log("Sound paths:", soundArr);
 
           const missingFiles = [];
 
@@ -282,10 +284,7 @@ const Home = () => {
           windowSize={5}
           onMomentumScrollEnd={(event) => {
             const index = Math.floor(event.nativeEvent.contentOffset.x / width);
-
             const pagePath = quranPagesPaths[index];
-            console.log(quranPagesPaths[index]);
-
             const currentPageData = pageData[pagePath];
             setCurrentIndex(currentPageData[0].chapter_id);
           }}

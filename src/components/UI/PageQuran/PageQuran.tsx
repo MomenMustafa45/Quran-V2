@@ -1,4 +1,4 @@
-import React, { useEffect, useState, memo } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -28,10 +28,6 @@ const PageQuran = ({
     pageNumber: number
   ) => void;
 }) => {
-  const lineNumbers = Array.from(
-    { length: LINES_PER_PAGE },
-    (_, index) => index + 1
-  );
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   const [soundsPlayingArr, setSoundsPlayingArr] = useState<QuranVerse[]>([]);
@@ -138,17 +134,15 @@ const PageQuran = ({
                   position: "relative",
                   flex: 1,
                   alignItems: "center",
-                  justifyContent: "center",
+                  justifyContent: "flex-start",
                   display: "flex",
+                  width: "100%",
                 }}
               >
                 <Text
                   style={{
                     fontFamily: "surahNames",
-                    fontSize: 24,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    fontSize: 22,
                   }}
                 >
                   ò
@@ -174,7 +168,8 @@ const PageQuran = ({
                   fontSize: 17,
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
+                  width: "100%",
+                  textAlign: "center",
                 }}
               >
                 ó
@@ -211,10 +206,11 @@ const styles = StyleSheet.create({
     position: "relative",
     flexDirection: "row-reverse",
     width: "100%",
-    justifyContent: "center",
+    justifyContent: "space-between",
     height: (heightDimension - 56 - 56 - 30) / 15,
     alignItems: "center",
     zIndex: 100,
+    paddingHorizontal: 35,
   },
   customText: {
     fontSize: 17,

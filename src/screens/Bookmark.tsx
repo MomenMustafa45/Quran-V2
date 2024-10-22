@@ -32,7 +32,7 @@ const Bookmark = () => {
           data={bookmarks}
           keyExtractor={(item, index) => String(index)}
           renderItem={({ item }) => <BookmarkItem item={item} />}
-          ListEmptyComponent={<Text>No bookmarks found</Text>} // Display a message if no bookmarks
+          ListEmptyComponent={<Text>No bookmarks found</Text>}
         />
       </View>
       <TabsNavigation setModalSearch={() => {}} />
