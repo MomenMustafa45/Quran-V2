@@ -32,17 +32,19 @@ const SurahsModal = ({
   const renderItem = useCallback(
     ({
       item,
-      index 
+      index,
     }: {
       item: { start_page: number; name_arabic: string; name_code: string };
+      index: number;
     }) => (
       <TouchableOpacity onPress={() => handleIndexButton(item.start_page)}>
         <View style={styles.listItem}>
           <TextReg>{item.start_page.toString()}</TextReg>
           <View className="flex-row">
-          <Text style={{ fontFamily: "surahNames" }}>{item.name_code}</Text>
-          <Text>.{index+1}</Text>
-
+            <Text style={{ fontFamily: "surahNames" }}>{item.name_code}</Text>
+            <TextReg>
+              <>.{index + 1}</>
+            </TextReg>
           </View>
         </View>
       </TouchableOpacity>
@@ -99,7 +101,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   modalContent: {
-    width: "70%",
+    width: 220,
     height: "100%",
     backgroundColor: "white",
     display: "flex",

@@ -26,11 +26,21 @@ const JuzModal = ({
 
   // Memoize the renderItem function to avoid unnecessary re-renders
   const renderItem = useCallback(
-    ({ item,index }: { item: { startPage: number; title: string } }) => (
+    ({
+      item,
+      index,
+    }: {
+      item: { startPage: number; title: string };
+      index: number;
+    }) => (
       <TouchableOpacity onPress={() => handleIndexButton(item.startPage)}>
         <View style={styles.listItem}>
           <TextReg>{item.startPage.toString()}</TextReg>
-          <TextReg><>{index+1}.{item.title}</></TextReg>
+          <TextReg>
+            <>
+              {index + 1}.{item.title}
+            </>
+          </TextReg>
         </View>
       </TouchableOpacity>
     ),
@@ -81,7 +91,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "flex-end",
     alignItems: "flex-end",
-    width: 300,
+    width: 220,
     marginBottom: "auto",
   },
   modalContent: {
@@ -106,7 +116,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderRightWidth: 5,
     borderRightColor: "#34a853",
-  
   },
   modalHeader: {
     display: "flex",
@@ -115,6 +124,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#34A853",
     padding: 10,
     height: 40,
-    
   },
 });
