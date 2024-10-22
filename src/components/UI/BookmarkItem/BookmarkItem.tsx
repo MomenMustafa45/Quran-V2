@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { RootNavigationParamList } from "../../../navigation/Stack";
 
 type BookmarkItem = {
-  item: { pageNumber: number };
+  item: { pageNumber: number; addedAt: string };
 };
 
 const BookmarkItem = ({ item }: BookmarkItem) => {
@@ -19,7 +19,12 @@ const BookmarkItem = ({ item }: BookmarkItem) => {
   return (
     <TouchableOpacity
       onPress={() => handleNavigateToPage(604 - item.pageNumber)}
+      className="flex-row justify-between items-center"
+      style={{ borderBottomWidth: 1, borderBottomColor: "#ccc" }}
     >
+      <View>
+        <Text>التوقيت: {item?.addedAt}</Text>
+      </View>
       <View style={styles.bookmarkItem}>
         <Text style={styles.bookmarkText}>
           رقم الصفحة: {604 - item.pageNumber}
@@ -35,8 +40,6 @@ const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
   bookmarkItem: {
     padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
   },
   bookmarkText: {
     fontSize: 16,
