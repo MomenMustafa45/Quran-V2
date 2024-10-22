@@ -7,6 +7,10 @@ import TextSemiBold from "../Texts/TextSemiBold";
 import { RootNavigationParamList } from "../../../navigation/Stack";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { surahsData } from "../IndexModal/utils/surahData";
+import { Image } from "react-native";
+import ColorIcon from "../../../../assets/images/colorIcon.svg";
+import MoshafIcon from "../../../../assets/images/moshafIcon.svg";
+import ColorModal from "../ColorModal/ColorModal";
 
 const LEVEL_SOUND_KEY = "levelSound";
 const MAX_LEVEL = 3;
@@ -23,6 +27,8 @@ const TabsNavigation = ({
   indexOfPage,
 }: TabsNavigationProp) => {
   const [levelSound, setLevelSound] = useState("1");
+  const [colorModalVisible, setColorModalVisible] = useState(false);
+  const [bgModalVisible, setBgModalVisible] = useState(false);
   const navigation = useNavigation<TabsNavigationProps>();
   const route = useRoute();
 
@@ -66,43 +72,44 @@ const TabsNavigation = ({
     })();
   }, []);
 
-  // console.log(surahsData[indexOfPage], indexOfPage, "from bottom");
-
   return (
-    <View className="mt-auto w-full flex flex-row justify-center items-center px-5 py-3 h-14">
+    <View className="mt-auto w-full flex flex-row justify-center items-center px-4 py-3 h-14">
       <View className="flex-row flex-1 justify-around">
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-          <MaterialCommunityIcons
-            name="mosque"
-            size={24}
-            color={route.name === "Home" ? "#159C3E" : "#8789A3"}
-          />
+          <MoshafIcon />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Feather
-            name="settings"
-            size={24}
-            color={route.name === "Settings" ? "#159C3E" : "#8789A3"}
-          />
+          <Feather name="settings" size={24} color={"#159C3E"} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("Bookmark")}>
-          <Feather
-            name="bookmark"
-            size={24}
-            color={route.name === "Bookmark" ? "#159C3E" : "#8789A3"}
-          />
+          <Feather name="bookmark" size={24} color={"#159C3E"} />
         </TouchableOpacity>
       </View>
 
-      <View className="flex-1 flex-row items-center justify-between">
-        {/* <View className=""> */}
+      <View className="flex items-center py-1">
         <Text style={{ fontFamily: "surahNames", textAlign: "center" }}>
           {surahsData[indexOfPage ? indexOfPage - 1 : 0]?.name_code} \
         </Text>
         <Text style={{ fontFamily: "surahNames", textAlign: "center" }}>
           ﰸ ﰹ
         </Text>
-        {/* </View> */}
+      </View>
+
+      <View className="flex-1 flex-row items-center justify-between px-4">
+        <TouchableOpacity
+          onPress={() => {
+            setColorModalVisible(true);
+          }}
+        >
+          <ColorIcon />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setBgModalVisible(true);
+          }}
+        >
+          <ColorIcon />
+        </TouchableOpacity>
 
         <TouchableOpacity
           className="flex items-center text"
@@ -114,6 +121,19 @@ const TabsNavigation = ({
           </TextSemiBold>
         </TouchableOpacity>
       </View>
+
+      {/* modal text */}
+      <ColorModal
+        modalVisible={colorModalVisible}
+        setModalVisible={setColorModalVisible}
+        type="text"
+      />
+      {/* modal bg */}
+      <ColorModal
+        modalVisible={bgModalVisible}
+        setModalVisible={setBgModalVisible}
+        type="bg"
+      />
     </View>
   );
 };

@@ -8,10 +8,11 @@ type VerseTextProps = {
   pageNumber: number;
   listenHandler: (verse: QuranVerse) => void;
   color: string;
+  bgColor: string;
 };
 
 const VerseText = memo(
-  ({ item, pageNumber, listenHandler, color }: VerseTextProps) => (
+  ({ item, pageNumber, listenHandler, color, bgColor }: VerseTextProps) => (
     <TouchableOpacity
       onPress={() => {
         listenHandler(item);
@@ -19,7 +20,10 @@ const VerseText = memo(
       style={{ position: "relative", zIndex: 1000 }}
     >
       <Text
-        style={[styles.customText, { fontFamily: `QCF-${pageNumber}`, color }]}
+        style={[
+          styles.customText,
+          { fontFamily: `QCF-${pageNumber}`, color, backgroundColor: bgColor },
+        ]}
       >
         {item.code_v2}
       </Text>
@@ -31,8 +35,9 @@ export default VerseText;
 
 const styles = StyleSheet.create({
   customText: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#000",
     padding: 1,
+    backgroundColor: "transparent",
   },
 });

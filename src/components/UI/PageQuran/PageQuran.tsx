@@ -15,11 +15,7 @@ import { surahsData } from "../IndexModal/utils/surahData";
 const LINES_PER_PAGE = 15;
 const heightDimension = Dimensions.get("window").height;
 
-const PageQuran = ({
-  dataPage,
-  pageNumber,
-  listenHandler,
-}: {
+type PageQuranProps = {
   dataPage: QuranVerse[];
   pageNumber: number;
   listenHandler: (
@@ -27,19 +23,36 @@ const PageQuran = ({
     verse: QuranVerse[],
     pageNumber: number
   ) => void;
-}) => {
+};
+
+const PageQuran = ({ dataPage, pageNumber, listenHandler }: PageQuranProps) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   const [soundsPlayingArr, setSoundsPlayingArr] = useState<QuranVerse[]>([]);
+
+  const [textColor, setTextColor] = useState<string>("");
+  const [textBgColor, setTextBgColor] = useState<string>("");
+
+  // Function to fetch colors from AsyncStorage
+  const fetchColorTextFromStorage = async () => {
+    const storedTextColor = await AsyncStorage.getItem("text-color");
+    if (storedTextColor) setTextColor(storedTextColor);
+  };
+
+  const fetchBgTextFromStorage = async () => {
+    const storedBgColor = await AsyncStorage.getItem("text-bg");
+    if (storedBgColor) setTextBgColor(storedBgColor);
+  };
 
   useEffect(() => {
     const loadFonts = async () => {
       await useFonts([`QCF-${pageNumber}`]);
       setFontsLoaded(true);
     };
-
+    fetchColorTextFromStorage();
+    fetchBgTextFromStorage();
     loadFonts();
-  }, [pageNumber]);
+  }, [pageNumber, fetchColorTextFromStorage, fetchBgTextFromStorage]);
 
   if (!fontsLoaded) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -76,9 +89,6 @@ const PageQuran = ({
     setSoundsPlayingArr([]);
   };
 
-  // if (pageNumber != 1) {
-  //   return null;
-  // }
   let output = [];
   for (let index = 0; index < LINES_PER_PAGE; index++) {
     const currentLine = dataPage.filter(
@@ -127,7 +137,18 @@ const PageQuran = ({
     <View style={styles.container}>
       {output.map((line: any, index) => {
         return (
-          <View key={index} style={styles.lineContainer}>
+          <View
+            key={index}
+            style={[
+              styles.lineContainer,
+              {
+                justifyContent:
+                  pageNumber == 1 || pageNumber == 2
+                    ? "center"
+                    : "space-between",
+              },
+            ]}
+          >
             {line[0].header ? (
               <View
                 style={{
@@ -181,7 +202,12 @@ const PageQuran = ({
                   item={item}
                   pageNumber={pageNumber}
                   listenHandler={handleListen}
-                  color={soundsPlayingArr.includes(item) ? "yellow" : "black"}
+                  color={soundsPlayingArr.includes(item) ? textColor : "black"}
+                  bgColor={
+                    soundsPlayingArr.includes(item)
+                      ? textBgColor
+                      : "transparent"
+                  }
                 />
               ))
             )}
@@ -200,7 +226,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     zIndex: 1000,
-    // backgroundColor: "#fff",
   },
   lineContainer: {
     position: "relative",
