@@ -35,6 +35,7 @@ const Home = () => {
   const [isLoadingImages, setIsLoadingImages] = useState(true);
   const [isGettingMoreAudios, setIsGettingMoreAudios] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentJuz, setCurrentJuz] = useState(0);
 
   const [surahModal, setSurahModal] = useState(false);
   const [juzModal, setJuzModal] = useState(false);
@@ -107,8 +108,10 @@ const Home = () => {
 
     if (currentPageData) {
       setCurrentIndex(currentPageData[0].chapter_id);
+      setCurrentJuz(currentPageData[0].juz_number);
     } else {
       setCurrentIndex(0);
+      setCurrentJuz(0);
     }
   }, []);
 
@@ -287,6 +290,7 @@ const Home = () => {
             const pagePath = quranPagesPaths[index];
             const currentPageData = pageData[pagePath];
             setCurrentIndex(currentPageData[0].chapter_id);
+            setCurrentJuz(currentPageData[0].juz_number);
           }}
           getItemLayout={(data, index) => ({
             length: width,
@@ -312,10 +316,7 @@ const Home = () => {
         modalVisible={modalVisibleSearch}
         setModalVisible={setModalVisibleSearch}
       />
-      <TabsNavigation
-        setModalSearch={() => setModalVisibleSearch(true)}
-        indexOfPage={currentIndex}
-      />
+      <TabsNavigation indexOfPage={currentIndex} juzNumber={currentJuz} />
     </>
   );
 };

@@ -1,16 +1,17 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useEffect, useState, useCallback } from "react";
-import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TextSemiBold from "../Texts/TextSemiBold";
 import { RootNavigationParamList } from "../../../navigation/Stack";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { surahsData } from "../IndexModal/utils/surahData";
-import { Image } from "react-native";
 import ColorIcon from "../../../../assets/images/colorIcon.svg";
 import MoshafIcon from "../../../../assets/images/moshafIcon.svg";
 import ColorModal from "../ColorModal/ColorModal";
+import { parts } from "../IndexModal/utils/partData";
+import TextReg from "../Texts/TextReg";
 
 const LEVEL_SOUND_KEY = "levelSound";
 const MAX_LEVEL = 3;
@@ -18,14 +19,11 @@ const MAX_LEVEL = 3;
 type TabsNavigationProps = DrawerNavigationProp<RootNavigationParamList>;
 
 type TabsNavigationProp = {
-  setModalSearch: () => void;
   indexOfPage?: number;
+  juzNumber?: number;
 };
 
-const TabsNavigation = ({
-  setModalSearch,
-  indexOfPage,
-}: TabsNavigationProp) => {
+const TabsNavigation = ({ indexOfPage, juzNumber }: TabsNavigationProp) => {
   const [levelSound, setLevelSound] = useState("1");
   const [colorModalVisible, setColorModalVisible] = useState(false);
   const [bgModalVisible, setBgModalVisible] = useState(false);
@@ -87,12 +85,15 @@ const TabsNavigation = ({
       </View>
 
       <View className="flex items-center py-1">
-        <Text style={{ fontFamily: "surahNames", textAlign: "center" }}>
+        <Text
+          style={{ fontFamily: "surahNames", textAlign: "center" }}
+          // className=" text-xs"
+        >
           {surahsData[indexOfPage ? indexOfPage - 1 : 0]?.name_code} \
         </Text>
-        <Text style={{ fontFamily: "surahNames", textAlign: "center" }}>
-          ﰸ ﰹ
-        </Text>
+        <TextReg styles="text-[10px]">
+          <>الجزء {parts[juzNumber ? juzNumber : 0].title}</>
+        </TextReg>
       </View>
 
       <View className="flex-1 flex-row items-center justify-between px-4">
