@@ -1,7 +1,8 @@
 import { memo } from "react";
-import { Dimensions, StyleSheet } from "react-native";
+import { Dimensions, Pressable, StyleSheet } from "react-native";
 import { Text, TouchableOpacity } from "react-native";
 import { QuranVerse } from "../../../lib/types/quranWordType";
+import { View } from "react-native";
 
 type VerseTextProps = {
   item: QuranVerse;
@@ -27,19 +28,17 @@ const VerseText = memo(
       onPress={() => {
         listenHandler(item);
       }}
-      style={{ position: "relative", zIndex: 1000 }}
+      style={{}}
     >
       <Text
         style={[
           styles.customText,
           {
-            position: "relative",
             fontFamily: `QCF-${pageNumber}`,
             color,
             backgroundColor: bgColor,
             fontSize,
             lineHeight,
-            zIndex: 20000,
           },
         ]}
       >
@@ -52,8 +51,5 @@ const VerseText = memo(
 export default VerseText;
 
 const styles = StyleSheet.create({
-  customText: {
-    display: "flex",
-    flex: 1,
-  },
+  customText: {},
 });
