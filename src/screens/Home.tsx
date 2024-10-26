@@ -26,6 +26,11 @@ import * as FileSystem from "expo-file-system";
 import SearchModal from "../components/UI/SearchModal/SearchModal";
 import { QuranVerse } from "../lib/types/quranWordType";
 import frameImg from "../../assets/images/frame-mohaf3.png";
+import Toast from "react-native-toast-message";
+import { useAppDispatch } from "../hooks/reduxHooks";
+import { surahIndexHandler } from "../store/reducers/surahIndex";
+import { juzIndexHandler } from "../store/reducers/juzIndexSlice";
+import { pageIndexHandler } from "../store/reducers/pageIndexSlice";
 
 const width = Dimensions.get("window").width;
 
@@ -33,18 +38,15 @@ const Home = () => {
   const [quranPagesPaths, setQuranPagesPaths] = useState<string[]>([]);
   const [pageData, setPageData] = useState<Record<string, any>>({});
   const [isLoadingImages, setIsLoadingImages] = useState(true);
+  const [progress, setProgress] = useState(0);
+
   const [isGettingMoreAudios, setIsGettingMoreAudios] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [currentJuz, setCurrentJuz] = useState(0);
 
-  const [surahModal, setSurahModal] = useState(false);
-  const [juzModal, setJuzModal] = useState(false);
-  const [modalVisibleSearch, setModalVisibleSearch] = useState(false);
-
+  const dispatch = useAppDispatch();
   const flatListRef = useRef<FlatList>(null);
   const { params }: any = useRoute();
 
-  const getTheDataFromPath = useCallback(async (path: string) => {
+  const getTheDataFromPath = async (path: string) => {
     try {
       const pageData = await FileSystem.readAsStringAsync(path);
       return JSON.parse(pageData);
@@ -52,12 +54,12 @@ const Home = () => {
       console.error(`Error reading data from ${path}:`, error);
       return null;
     }
-  }, []);
+  };
 
   useEffect(() => {
     const loadQuranPages = async () => {
       try {
-        const paths = await fetchAndStoreQuranPages();
+        const paths = await fetchAndStoreQuranPages(setProgress);
         setQuranPagesPaths([...paths.reverse()]);
         const dataPromises = paths.map((path) => getTheDataFromPath(path));
         const allPageData = await Promise.all(dataPromises);
@@ -74,7 +76,7 @@ const Home = () => {
     };
 
     loadQuranPages();
-  }, [getTheDataFromPath]);
+  }, []);
 
   useEffect(() => {
     checkForDownloadedAudio({
@@ -90,11 +92,7 @@ const Home = () => {
     }
   }, [params]);
 
-  const handleBookmark = async (currentIndex: number) => {
-    saveBookmark({ pageNumber: currentIndex });
-  };
-
-  const scrollToIndex = useCallback((index: number) => {
+  const scrollToIndex = (index: number) => {
     if (flatListRef.current) {
       flatListRef.current.scrollToIndex({
         index: 604 - index,
@@ -107,13 +105,13 @@ const Home = () => {
     const currentPageData = pageData[pagePath];
 
     if (currentPageData) {
-      setCurrentIndex(currentPageData[0].chapter_id);
-      setCurrentJuz(currentPageData[0].juz_number);
+      dispatch(surahIndexHandler(currentPageData[0].chapter_id));
+      dispatch(juzIndexHandler(currentPageData[0].juz_number));
     } else {
-      setCurrentIndex(0);
-      setCurrentJuz(0);
+      dispatch(surahIndexHandler(0));
+      dispatch(juzIndexHandler(0));
     }
-  }, []);
+  };
 
   const listenHandler = useCallback(
     async (
@@ -233,40 +231,21 @@ const Home = () => {
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#159C3E" />
         <TextReg>جاري تحميل البيانات...</TextReg>
+        <TextReg>
+          <>Progress: {progress}%</>
+        </TextReg>
       </View>
     );
   }
 
   return (
     <>
-      <CustomDrawerHeader
-        setJuzModal={() => setJuzModal(true)}
-        setModalVisibleSurah={() => setSurahModal(true)}
-        bookmarkHandler={() => handleBookmark(currentIndex)}
-      />
+      <CustomDrawerHeader />
       <ImageBackground
         source={frameImg}
         resizeMode="stretch"
         style={styles.container}
       >
-        {/* <View
-          style={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            top: 0,
-            left: 0,
-            zIndex: 1,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Image
-            source={frameImg}
-            style={{ width: "100%", height: "100%", resizeMode: "stretch" }}
-          />
-        </View> */}
         {isGettingMoreAudios && (
           <View style={styles.audioLoading}>
             <ActivityIndicator size="small" color="#fff" />
@@ -289,10 +268,11 @@ const Home = () => {
             const index = Math.floor(event.nativeEvent.contentOffset.x / width);
             const pagePath = quranPagesPaths[index];
             const currentPageData = pageData[pagePath];
-            setCurrentIndex(currentPageData[0].chapter_id);
-            setCurrentJuz(currentPageData[0].juz_number);
+            dispatch(surahIndexHandler(currentPageData[0].chapter_id));
+            dispatch(juzIndexHandler(currentPageData[0].juz_number));
+            dispatch(pageIndexHandler(index));
           }}
-          getItemLayout={(data, index) => ({
+          getItemLayout={(_, index) => ({
             length: width,
             offset: width * index,
             index,
@@ -301,22 +281,9 @@ const Home = () => {
         />
       </ImageBackground>
 
-      <JuzModal
-        goToPage={scrollToIndex}
-        modalVisible={juzModal}
-        setModalVisible={setJuzModal}
-      />
-      <SurahsModal
-        goToPage={scrollToIndex}
-        modalVisible={surahModal}
-        setModalVisible={setSurahModal}
-      />
-      <SearchModal
-        goToPage={scrollToIndex}
-        modalVisible={modalVisibleSearch}
-        setModalVisible={setModalVisibleSearch}
-      />
-      <TabsNavigation indexOfPage={currentIndex} juzNumber={currentJuz} />
+      <JuzModal goToPage={scrollToIndex} />
+      <SurahsModal goToPage={scrollToIndex} />
+      <TabsNavigation />
     </>
   );
 };

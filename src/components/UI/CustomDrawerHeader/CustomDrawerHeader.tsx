@@ -1,38 +1,23 @@
-import {
-  View,
-  Text,
-  Touchable,
-  TouchableWithoutFeedback,
-  TouchableOpacity,
-} from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import React from "react";
-import {
-  Entypo,
-  Feather,
-  FontAwesome,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+import { Entypo, Feather } from "@expo/vector-icons";
 import TextReg from "../Texts/TextReg";
 import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation } from "@react-navigation/native";
-import { DrawerNavigationProp } from "@react-navigation/drawer";
-import { RootNavigationParamList } from "../../../navigation/Stack";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
+import { openSurahModal } from "../../../store/reducers/surahIndex";
+import { openJuzModal } from "../../../store/reducers/juzIndexSlice";
+import { handleBookmark } from "../../../services/bookmarkServices";
 
-type DrawerContentProps = DrawerNavigationProp<RootNavigationParamList>;
+const CustomDrawerHeader = () => {
+  const pageIndex = useAppSelector((state) => state.pageIndex.value);
+  const dispatch = useAppDispatch();
 
-type CustomDrawerHeaderProps = {
-  setJuzModal: () => void;
-
-  setModalVisibleSurah: () => void;
-  bookmarkHandler: () => void;
-};
-
-const CustomDrawerHeader = ({
-  setModalVisibleSurah,
-  bookmarkHandler,
-  setJuzModal,
-}: CustomDrawerHeaderProps) => {
-  const navigation = useNavigation<DrawerContentProps>();
+  const surahModalOpen = () => {
+    dispatch(openSurahModal());
+  };
+  const juzModalOpen = () => {
+    dispatch(openJuzModal());
+  };
 
   return (
     <View className=" relative flex flex-row px-3 justify-between h-14 items-center">
@@ -59,18 +44,18 @@ const CustomDrawerHeader = ({
           height: "100%",
         }}
       />
-      <TouchableOpacity onPress={setJuzModal}>
+      <TouchableOpacity onPress={juzModalOpen}>
         <Entypo name="menu" size={22} color="white" />
       </TouchableOpacity>
       <TextReg styles="text-white">مصحف المسلمين</TextReg>
       <View className="flex-row items-center">
-        <TouchableOpacity onPress={bookmarkHandler} style={{ marginLeft: 5 }}>
+        <TouchableOpacity
+          onPress={() => handleBookmark(pageIndex)}
+          style={{ marginLeft: 5 }}
+        >
           <Feather name="bookmark" size={22} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={{ marginLeft: 5 }}
-          onPress={setModalVisibleSurah}
-        >
+        <TouchableOpacity style={{ marginLeft: 5 }} onPress={surahModalOpen}>
           <Entypo name="menu" size={22} color="white" />
         </TouchableOpacity>
       </View>

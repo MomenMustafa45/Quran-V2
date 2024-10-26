@@ -2,27 +2,29 @@ import React, { useCallback, useMemo } from "react";
 import { StyleSheet, View, FlatList, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
 import TextReg from "../Texts/TextReg";
-import { parts } from "../IndexModal/utils/partData";
+import { parts } from "../../../lib/utils/partData";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
+import { closeJuzModal } from "../../../store/reducers/juzIndexSlice";
 
 type IndexModalProps = {
-  modalVisible: boolean;
-  setModalVisible: (value: boolean) => void;
   goToPage: (index: number) => void;
 };
 
-const JuzModal = ({
-  modalVisible,
-  setModalVisible,
-  goToPage,
-}: IndexModalProps) => {
-  // Use useCallback to avoid re-creating the function
-  const handleIndexButton = useCallback(
-    (item: number) => {
-      goToPage(item);
-      setModalVisible(false);
-    },
-    [goToPage, setModalVisible]
+const JuzModal = ({ goToPage }: IndexModalProps) => {
+  const modalVisible = useAppSelector(
+    (state) => state.juzIndex.juzModalVisible
   );
+
+  const dispatch = useAppDispatch();
+
+  const closeModal = () => {
+    dispatch(closeJuzModal());
+  };
+  // Use useCallback to avoid re-creating the function
+  const handleIndexButton = (item: number) => {
+    goToPage(item);
+    dispatch(closeJuzModal());
+  };
 
   // Memoize the renderItem function to avoid unnecessary re-renders
   const renderItem = useCallback(
@@ -61,7 +63,7 @@ const JuzModal = ({
       animationIn="slideInLeft"
       animationOut="slideOutLeft"
       backdropOpacity={0.5}
-      onBackdropPress={() => setModalVisible(false)}
+      onBackdropPress={closeModal}
       style={styles.modalContainer}
     >
       <View style={styles.modalContent}>
@@ -116,6 +118,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderRightWidth: 5,
     borderRightColor: "#34a853",
+    paddingHorizontal: 10,
   },
   modalHeader: {
     display: "flex",

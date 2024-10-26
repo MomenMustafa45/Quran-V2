@@ -1,4 +1,5 @@
 import { Audio } from "expo-av";
+import Toast from "react-native-toast-message";
 
 // Create a persistent variable to track the current sound and play state
 let currentSound: Audio.Sound | null = null;
@@ -71,10 +72,11 @@ async function playSoundsFromPaths(paths: string[], loopCount: number = 1) {
           await sound.unloadAsync();
           currentSound = null; // Clear the reference after unloading
         } catch (error) {
-          console.error(
-            `Error playing sound for path at index ${i}: ${item}`,
-            error
-          );
+          Toast.show({
+            type: "error",
+            text1: `Error playing sound`,
+            position: "bottom",
+          });
         }
       }
     }

@@ -6,29 +6,26 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import TextSemiBold from "../Texts/TextSemiBold";
 import { RootNavigationParamList } from "../../../navigation/Stack";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
-import { surahsData } from "../IndexModal/utils/surahData";
 import ColorIcon from "../../../../assets/images/colorIcon.svg";
 import MoshafIcon from "../../../../assets/images/moshafIcon.svg";
 import ColorModal from "../ColorModal/ColorModal";
-import { parts } from "../IndexModal/utils/partData";
 import TextReg from "../Texts/TextReg";
+import { parts } from "../../../lib/utils/partData";
+import { surahsData } from "../../../lib/utils/surahData";
+import { useAppSelector } from "../../../hooks/reduxHooks";
 
 const LEVEL_SOUND_KEY = "levelSound";
 const MAX_LEVEL = 3;
 
 type TabsNavigationProps = DrawerNavigationProp<RootNavigationParamList>;
 
-type TabsNavigationProp = {
-  indexOfPage?: number;
-  juzNumber?: number;
-};
-
-const TabsNavigation = ({ indexOfPage, juzNumber }: TabsNavigationProp) => {
+const TabsNavigation = () => {
   const [levelSound, setLevelSound] = useState("1");
   const [colorModalVisible, setColorModalVisible] = useState(false);
   const [bgModalVisible, setBgModalVisible] = useState(false);
   const navigation = useNavigation<TabsNavigationProps>();
-  const route = useRoute();
+  const surahIndex = useAppSelector((state) => state.surahIndex.value);
+  const juzIndex = useAppSelector((state) => state.juzIndex.value);
 
   // Helper function to get the current level sound from AsyncStorage
   const getStoredLevelSound = async () => {
@@ -89,10 +86,10 @@ const TabsNavigation = ({ indexOfPage, juzNumber }: TabsNavigationProp) => {
           style={{ fontFamily: "surahNames", textAlign: "center" }}
           // className=" text-xs"
         >
-          {surahsData[indexOfPage ? indexOfPage - 1 : 0]?.name_code} \
+          {surahsData[surahIndex ? surahIndex - 1 : 0]?.name_code} \
         </Text>
         <TextReg styles="text-[10px]">
-          <>الجزء {parts[juzNumber ? juzNumber : 0].title}</>
+          <>الجزء {parts[juzIndex ? juzIndex - 1 : 0].title}</>
         </TextReg>
       </View>
 

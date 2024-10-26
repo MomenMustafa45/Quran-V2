@@ -10,7 +10,7 @@ import { QuranVerse } from "../../../lib/types/quranWordType";
 import useFonts from "../../../hooks/useFonts";
 import VerseText from "../VerseText/VerseText";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { surahsData } from "../IndexModal/utils/surahData";
+import { surahsData } from "../../../lib/utils/surahData";
 
 const LINES_PER_PAGE = 15;
 const heightDimension = Dimensions.get("window").height;
@@ -30,7 +30,7 @@ const PageQuran = ({ dataPage, pageNumber, listenHandler }: PageQuranProps) => {
 
   const [soundsPlayingArr, setSoundsPlayingArr] = useState<QuranVerse[]>([]);
 
-  const [textColor, setTextColor] = useState<string>("");
+  const [textColor, setTextColor] = useState<string>("#98FF98");
   const [textBgColor, setTextBgColor] = useState<string>("");
 
   // Function to fetch colors from AsyncStorage
@@ -105,19 +105,6 @@ const PageQuran = ({ dataPage, pageNumber, listenHandler }: PageQuranProps) => {
       output.push([
         { header: true, ...surahsData[currentLine[0].chapter_id - 1] },
       ]);
-
-      // const nextLine = dataPage.filter(
-      //   (item) => item.line_number === index + 2
-      // );
-
-      // if (nextLine.length == 0 && index + 1 != LINES_PER_PAGE) {
-      //   const chapter = surahsData.filter(
-      //     (data) => data.id == currentLine[0].chapter_id
-      //   )[0];
-      //   if (chapter?.pre_bismillah) {
-      //     output.push([{ bismillah: true }]);
-      //   }
-      // }
     } else if (currentLine.length == 0) {
       output.push([{ bismillah: true }]);
     } else {

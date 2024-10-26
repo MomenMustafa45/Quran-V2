@@ -1,4 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Alert } from "react-native";
+import Toast from "react-native-toast-message";
 
 const formatDateTime = () => {
   const now = new Date();
@@ -28,6 +30,7 @@ export const saveBookmark = async ({
   setBookmarks?: (arr: []) => void;
 }) => {
   try {
+    let isRemoved;
     // Retrieve current bookmarks from AsyncStorage
     const currentBookmarks = await AsyncStorage.getItem("bookmarks");
     let updatedBookmarks = currentBookmarks ? JSON.parse(currentBookmarks) : [];
@@ -40,6 +43,7 @@ export const saveBookmark = async ({
     if (bookmarkIndex !== -1) {
       // Bookmark exists, so remove it
       updatedBookmarks.splice(bookmarkIndex, 1);
+      isRemoved = true;
     } else {
       // Bookmark doesn't exist, so add it
       const newBookmark = {
@@ -47,6 +51,7 @@ export const saveBookmark = async ({
         addedAt: formatDateTime(), // Use the custom date formatting function
       };
       updatedBookmarks = [...updatedBookmarks, newBookmark];
+      isRemoved = false;
     }
 
     // Update AsyncStorage and state with the updated bookmarks
@@ -54,8 +59,28 @@ export const saveBookmark = async ({
     if (setBookmarks) {
       setBookmarks(updatedBookmarks); // Update state
     }
+    return isRemoved;
     console.log("Bookmark toggled with timestamp.");
   } catch (error) {
     console.error("Error toggling bookmark", error);
+  }
+};
+
+export const handleBookmark = async (currentIndex: number) => {
+  const isRemoved = await saveBookmark({ pageNumber: currentIndex });
+  if (isRemoved) {
+    Toast.show({
+      type: "success",
+      text1: "الصفحة تم ازالتها لوجودها مسبقا",
+      position: "bottom",
+      visibilityTime: 2000,
+    });
+  } else {
+    Toast.show({
+      type: "success",
+      text1: "تم اضافة الصفحة",
+      position: "bottom",
+      visibilityTime: 2000,
+    });
   }
 };

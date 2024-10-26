@@ -8,26 +8,29 @@ import {
 } from "react-native";
 import Modal from "react-native-modal";
 import TextReg from "../Texts/TextReg";
-import { surahsData } from "../IndexModal/utils/surahData";
+import { surahsData } from "../../../lib/utils/surahData";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
+import { closeSurahModal } from "../../../store/reducers/surahIndex";
 
 type IndexModalProps = {
-  modalVisible: boolean;
-  setModalVisible: (value: boolean) => void;
   goToPage: (index: number) => void;
 };
 
-const SurahsModal = ({
-  modalVisible,
-  setModalVisible,
-  goToPage,
-}: IndexModalProps) => {
-  const handleIndexButton = useCallback(
-    (item: number) => {
-      goToPage(item);
-      setModalVisible(false);
-    },
-    [goToPage, setModalVisible]
+const SurahsModal = ({ goToPage }: IndexModalProps) => {
+  const modalVisible = useAppSelector(
+    (state) => state.surahIndex.surahModalVisible
   );
+
+  const dispatch = useAppDispatch();
+
+  const closeModal = () => {
+    dispatch(closeSurahModal());
+  };
+
+  const handleIndexButton = (item: number) => {
+    goToPage(item);
+    dispatch(closeSurahModal());
+  };
 
   const renderItem = useCallback(
     ({
@@ -68,7 +71,7 @@ const SurahsModal = ({
       animationIn="slideInRight"
       animationOut="slideOutRight"
       backdropOpacity={0.5}
-      onBackdropPress={() => setModalVisible(false)}
+      onBackdropPress={closeModal}
       style={styles.modalContainer}
     >
       <View style={styles.modalContent}>
@@ -114,6 +117,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#34a853",
     borderLeftWidth: 5,
     borderLeftColor: "#34A853",
+    paddingHorizontal: 10,
   },
   modalHeader: {
     flexDirection: "row",

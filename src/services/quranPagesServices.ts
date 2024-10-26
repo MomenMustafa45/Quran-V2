@@ -1,9 +1,10 @@
 import * as FileSystem from "expo-file-system";
+import Toast from "react-native-toast-message";
 
 const TOTAL_PAGES = 604; // Total number of Quran pages
 const DIRECTORY_PATH = `${FileSystem.documentDirectory}quran_pages/`; // Directory to store pages
 
-export const fetchAndStoreQuranPages = async () => {
+export const fetchAndStoreQuranPages = async (setProgress: any) => {
   try {
     // Check if the directory exists, if not, create it
     const directoryInfo = await FileSystem.getInfoAsync(DIRECTORY_PATH);
@@ -35,6 +36,8 @@ export const fetchAndStoreQuranPages = async () => {
 
       // Push the file path to the array
       pagePaths.push(filePath);
+
+      setProgress(((page / TOTAL_PAGES) * 100).toFixed(1)); // Track progress percentage
     }
 
     return pagePaths; // Return array of file paths
@@ -52,7 +55,12 @@ const fetchQuranPageData = async (page: number) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error(`Error fetching data for page ${page}:`, error);
+    // console.error(`Error fetching data for page ${page}:`, error);
+    Toast.show({
+      type: "error",
+      text1: `Error fetching data for page ${page}: check your network connection`,
+      position: "bottom",
+    });
     return null;
   }
 };

@@ -4,6 +4,9 @@ import StackNavigation from "./src/navigation/Stack";
 import useFonts from "./src/hooks/useFonts";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ActivityIndicator, StatusBar, View } from "react-native";
+import Toast from "react-native-toast-message";
+import { Provider } from "react-redux";
+import { store } from "./src/store/store";
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
@@ -40,10 +43,13 @@ export default function App() {
 
   return (
     <SafeAreaProvider style={{ flex: 1 }}>
-      <StatusBar />
-      <NavigationContainer>
-        <StackNavigation />
-      </NavigationContainer>
+      <Provider store={store}>
+        <StatusBar />
+        <NavigationContainer>
+          <StackNavigation />
+        </NavigationContainer>
+        <Toast />
+      </Provider>
     </SafeAreaProvider>
   );
 }
