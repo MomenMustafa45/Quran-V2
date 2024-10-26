@@ -4,7 +4,6 @@ import {
   StyleSheet,
   ActivityIndicator,
   FlatList,
-  ImageBackground,
 } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import TabsNavigation from "../components/UI/TabsNavigation/TabsNavigation";
@@ -14,7 +13,6 @@ import {
   fetchAndDownloadAudioForAllPages,
 } from "../services/audioServices";
 import CustomDrawerHeader from "../components/UI/CustomDrawerHeader/CustomDrawerHeader";
-import { saveBookmark } from "../services/bookmarkServices";
 import { useRoute } from "@react-navigation/native";
 import playSoundsFromPaths, { stopPlayback } from "../services/playSound";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -23,10 +21,7 @@ import SurahsModal from "../components/UI/SurahsModal/SurahsModal";
 import PageQuran from "../components/UI/PageQuran/PageQuran";
 import { fetchAndStoreQuranPages } from "../services/quranPagesServices";
 import * as FileSystem from "expo-file-system";
-import SearchModal from "../components/UI/SearchModal/SearchModal";
 import { QuranVerse } from "../lib/types/quranWordType";
-import frameImg from "../../assets/images/frame-mohaf3.png";
-import Toast from "react-native-toast-message";
 import { useAppDispatch } from "../hooks/reduxHooks";
 import { surahIndexHandler } from "../store/reducers/surahIndex";
 import { juzIndexHandler } from "../store/reducers/juzIndexSlice";
@@ -241,11 +236,7 @@ const Home = () => {
   return (
     <>
       <CustomDrawerHeader />
-      <ImageBackground
-        source={frameImg}
-        resizeMode="stretch"
-        style={styles.container}
-      >
+      <View style={styles.container}>
         {isGettingMoreAudios && (
           <View style={styles.audioLoading}>
             <ActivityIndicator size="small" color="#fff" />
@@ -279,7 +270,7 @@ const Home = () => {
           })}
           initialScrollIndex={quranPagesPaths.length - 1}
         />
-      </ImageBackground>
+      </View>
 
       <JuzModal goToPage={scrollToIndex} />
       <SurahsModal goToPage={scrollToIndex} />

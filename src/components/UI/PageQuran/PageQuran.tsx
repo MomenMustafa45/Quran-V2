@@ -15,6 +15,12 @@ import { surahsData } from "../../../lib/utils/surahData";
 const LINES_PER_PAGE = 15;
 const heightDimension = Dimensions.get("window").height;
 
+// Calculate font size based on screen height
+const calculateFontSize = () => {
+  const baseFontSize = heightDimension / (LINES_PER_PAGE * 2.8); // Adjust this divisor for more or less space
+  return Math.max(14, Math.min(baseFontSize, 22)); // Set min and max font sizes
+};
+
 type PageQuranProps = {
   dataPage: QuranVerse[];
   pageNumber: number;
@@ -43,6 +49,8 @@ const PageQuran = ({ dataPage, pageNumber, listenHandler }: PageQuranProps) => {
     const storedBgColor = await AsyncStorage.getItem("text-bg");
     if (storedBgColor) setTextBgColor(storedBgColor);
   };
+
+  const fontSize = calculateFontSize(); // Calculate font size based on screen height
 
   useEffect(() => {
     const loadFonts = async () => {
@@ -95,8 +103,6 @@ const PageQuran = ({ dataPage, pageNumber, listenHandler }: PageQuranProps) => {
       (item) => item.line_number === index + 1
     );
 
-    // console.log(index + 1, currentLine[0]);
-
     const forceEmptyLines =
       (pageNumber == 1 && index + 1 > 8) || (pageNumber == 2 && index + 1 > 7);
     if (forceEmptyLines) {
@@ -112,13 +118,6 @@ const PageQuran = ({ dataPage, pageNumber, listenHandler }: PageQuranProps) => {
       // output.push([{ line: true }]);
     }
   }
-
-  // console.log(pageNumber);
-
-  // console.log(output);
-  // console.log(output.length);
-
-  // return null;
 
   return (
     <View style={styles.container}>
@@ -195,6 +194,7 @@ const PageQuran = ({ dataPage, pageNumber, listenHandler }: PageQuranProps) => {
                       ? textBgColor
                       : "transparent"
                   }
+                  fontSize={fontSize}
                 />
               ))
             )}
@@ -215,18 +215,14 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   lineContainer: {
+    display: "flex",
     position: "relative",
     flexDirection: "row-reverse",
     width: "100%",
-    justifyContent: "space-between",
-    height: (heightDimension - 56 - 56 - 30) / 15,
+    justifyContent: "flex-start",
+    height: (heightDimension - 40 - 56 - 30) / 15,
     alignItems: "center",
     zIndex: 100,
-    paddingHorizontal: 35,
-  },
-  customText: {
-    fontSize: 17,
-    color: "#000",
-    padding: 1,
+    paddingHorizontal: 5,
   },
 });

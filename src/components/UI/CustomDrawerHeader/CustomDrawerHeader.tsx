@@ -20,7 +20,7 @@ const CustomDrawerHeader = () => {
   };
 
   return (
-    <View className=" relative flex flex-row px-3 justify-between h-14 items-center">
+    <View className=" relative flex flex-row px-3 justify-between h-10 items-center">
       <LinearGradient
         // Background Linear Gradient
         colors={[
