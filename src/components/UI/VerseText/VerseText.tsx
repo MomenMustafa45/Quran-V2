@@ -1,8 +1,7 @@
 import { memo } from "react";
-import { Dimensions, Pressable, StyleSheet } from "react-native";
-import { Text, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { Text } from "react-native";
 import { QuranVerse } from "../../../lib/types/quranWordType";
-import { View } from "react-native";
 
 type VerseTextProps = {
   item: QuranVerse;
@@ -28,7 +27,7 @@ const VerseText = memo(
       onPress={() => {
         listenHandler(item);
       }}
-      style={{}}
+      style={styles.button}
     >
       <Text
         style={[
@@ -51,5 +50,10 @@ const VerseText = memo(
 export default VerseText;
 
 const styles = StyleSheet.create({
-  customText: {},
+  button: {
+    alignSelf: "flex-start", // This makes the button width fit its content.
+  },
+  customText: {
+    alignSelf: "flex-start", // This makes the text width fit its content.
+  },
 });
