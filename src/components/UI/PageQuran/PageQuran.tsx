@@ -14,12 +14,12 @@ import { surahsData } from "../../../lib/utils/surahData";
 
 const LINES_PER_PAGE = 15;
 // const heightDimension = Dimensions.get("window").height;
-// const widthDimension = Dimensions.get("window").width;
+const widthDimension = Dimensions.get("window").width;
 const { height: windowHeight } = Dimensions.get("window");
 
 // Calculate font size and line height based on viewport height
 const calculateFontSize = () => {
-  return windowHeight * 0.027; // 3.2% of viewport height
+  return widthDimension * 0.05; // 3.2% of viewport height
 };
 
 const calculateLineHeight = () => {
