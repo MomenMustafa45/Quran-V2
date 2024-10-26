@@ -10,6 +10,7 @@ type VerseTextProps = {
   color: string;
   bgColor: string;
   fontSize: number;
+  lineHeight: number;
 };
 
 const VerseText = memo(
@@ -20,6 +21,7 @@ const VerseText = memo(
     color,
     bgColor,
     fontSize,
+    lineHeight,
   }: VerseTextProps) => (
     <TouchableOpacity
       onPress={() => {
@@ -35,6 +37,7 @@ const VerseText = memo(
             color,
             backgroundColor: bgColor,
             fontSize,
+            lineHeight,
           },
         ]}
       >

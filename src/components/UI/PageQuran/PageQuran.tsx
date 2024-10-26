@@ -13,12 +13,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { surahsData } from "../../../lib/utils/surahData";
 
 const LINES_PER_PAGE = 15;
-const heightDimension = Dimensions.get("window").height;
+// const heightDimension = Dimensions.get("window").height;
+// const widthDimension = Dimensions.get("window").width;
+const { height: windowHeight } = Dimensions.get("window");
 
-// Calculate font size based on screen height
+// Calculate font size and line height based on viewport height
 const calculateFontSize = () => {
-  const baseFontSize = heightDimension / (LINES_PER_PAGE * 2.5); // Adjust this divisor for more or less space
-  return Math.max(14, Math.min(baseFontSize, 22)); // Set min and max font sizes
+  return windowHeight * 0.029; // 3.2% of viewport height
+};
+
+const calculateLineHeight = () => {
+  return windowHeight * 0.061; // 6.1% of viewport height
 };
 
 type PageQuranProps = {
@@ -50,7 +55,8 @@ const PageQuran = ({ dataPage, pageNumber, listenHandler }: PageQuranProps) => {
     if (storedBgColor) setTextBgColor(storedBgColor);
   };
 
-  const fontSize = calculateFontSize(); // Calculate font size based on screen height
+  const fontSize = calculateFontSize(); // Calculate font size
+  const lineHeight = calculateLineHeight(); // Calculate line height
 
   useEffect(() => {
     const loadFonts = async () => {
@@ -195,6 +201,7 @@ const PageQuran = ({ dataPage, pageNumber, listenHandler }: PageQuranProps) => {
                       : "transparent"
                   }
                   fontSize={fontSize}
+                  lineHeight={lineHeight}
                 />
               ))
             )}
@@ -219,7 +226,7 @@ const styles = StyleSheet.create({
     position: "relative",
     flexDirection: "row-reverse",
     width: "100%",
-    height: (heightDimension - 40 - 56 - 30) / 15,
+    height: (windowHeight - 40 - 56 - 30) / 15,
     alignItems: "center",
     zIndex: 100,
     paddingHorizontal: 5,
