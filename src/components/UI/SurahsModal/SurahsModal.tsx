@@ -100,8 +100,8 @@ const styles = StyleSheet.create({
     margin: 0,
     display: "flex",
     width: "100%",
-    marginBottom: "auto",
-    alignItems: "flex-end",
+    flexDirection: "row-reverse",
+    justifyContent: "flex-start",
   },
   modalContent: {
     width: 220,

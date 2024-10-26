@@ -91,13 +91,9 @@ const styles = StyleSheet.create({
   modalContainer: {
     margin: 0,
     display: "flex",
-    justifyContent: "flex-end",
-    alignItems: "flex-end",
-    width: 220,
-    marginBottom: "auto",
   },
   modalContent: {
-    width: "100%",
+    width: 220,
     height: "100%",
     backgroundColor: "white",
     display: "flex",
