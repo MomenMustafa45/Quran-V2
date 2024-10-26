@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import React, { useEffect, useState, useCallback } from "react";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -9,10 +9,6 @@ import { DrawerNavigationProp } from "@react-navigation/drawer";
 import ColorIcon from "../../../../assets/images/colorIcon.svg";
 import MoshafIcon from "../../../../assets/images/moshafIcon.svg";
 import ColorModal from "../ColorModal/ColorModal";
-import TextReg from "../Texts/TextReg";
-import { parts } from "../../../lib/utils/partData";
-import { surahsData } from "../../../lib/utils/surahData";
-import { useAppSelector } from "../../../hooks/reduxHooks";
 
 const LEVEL_SOUND_KEY = "levelSound";
 const MAX_LEVEL = 3;
@@ -24,8 +20,6 @@ const TabsNavigation = () => {
   const [colorModalVisible, setColorModalVisible] = useState(false);
   const [bgModalVisible, setBgModalVisible] = useState(false);
   const navigation = useNavigation<TabsNavigationProps>();
-  const surahIndex = useAppSelector((state) => state.surahIndex.value);
-  const juzIndex = useAppSelector((state) => state.juzIndex.value);
 
   // Helper function to get the current level sound from AsyncStorage
   const getStoredLevelSound = async () => {
@@ -79,18 +73,6 @@ const TabsNavigation = () => {
         <TouchableOpacity onPress={() => navigation.navigate("Bookmark")}>
           <Feather name="bookmark" size={24} color={"#159C3E"} />
         </TouchableOpacity>
-      </View>
-
-      <View className="flex items-center py-1">
-        <Text
-          style={{ fontFamily: "surahNames", textAlign: "center" }}
-          // className=" text-xs"
-        >
-          {surahsData[surahIndex ? surahIndex - 1 : 0]?.name_code} \
-        </Text>
-        <TextReg styles="text-[10px]">
-          <>الجزء {parts[juzIndex ? juzIndex - 1 : 0].title}</>
-        </TextReg>
       </View>
 
       <View className="flex-1 flex-row items-center justify-between px-4">

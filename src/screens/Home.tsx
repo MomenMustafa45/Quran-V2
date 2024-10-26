@@ -15,7 +15,6 @@ import {
 import CustomDrawerHeader from "../components/UI/CustomDrawerHeader/CustomDrawerHeader";
 import { useRoute } from "@react-navigation/native";
 import playSoundsFromPaths, { stopPlayback } from "../services/playSound";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import JuzModal from "../components/UI/JuzModal/JuzModal";
 import SurahsModal from "../components/UI/SurahsModal/SurahsModal";
 import PageQuran from "../components/UI/PageQuran/PageQuran";
@@ -26,6 +25,7 @@ import { useAppDispatch } from "../hooks/reduxHooks";
 import { surahIndexHandler } from "../store/reducers/surahIndex";
 import { juzIndexHandler } from "../store/reducers/juzIndexSlice";
 import { pageIndexHandler } from "../store/reducers/pageIndexSlice";
+import { useGetColors } from "../lib/utils/setColorsFromStorage";
 
 const width = Dimensions.get("window").width;
 
@@ -80,6 +80,8 @@ const Home = () => {
       TOTAL_PAGES: 1,
     });
   }, []);
+  // hook to get the colors from storage
+  useGetColors();
 
   useEffect(() => {
     if (params?.pageNumber) {
@@ -112,10 +114,9 @@ const Home = () => {
     async (
       quranVerseItem: QuranVerse,
       quranVerses: QuranVerse[],
-      pageNumber: number
+      pageNumber: number,
+      levelNumber: string
     ) => {
-      const levelNumber = await AsyncStorage.getItem("levelSound");
-
       try {
         if (levelNumber) {
           stopPlayback();

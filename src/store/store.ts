@@ -2,6 +2,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import pageIndexSlice from "./reducers/pageIndexSlice";
 import surahIndexSlice from "./reducers/surahIndex";
 import juzIndexSlice from "./reducers/juzIndexSlice";
+import textColorSlice from "./reducers/textSoundColor";
+import textBgColorSlice from "./reducers/textbgColor";
 // ...
 
 export const store = configureStore({
@@ -9,6 +11,8 @@ export const store = configureStore({
     pageIndex: pageIndexSlice,
     surahIndex: surahIndexSlice,
     juzIndex: juzIndexSlice,
+    textColor: textColorSlice,
+    textBgColor: textBgColorSlice,
   },
 });
 

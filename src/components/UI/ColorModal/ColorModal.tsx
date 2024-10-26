@@ -4,6 +4,9 @@ import { StyleSheet } from "react-native";
 import Modal from "react-native-modal";
 import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAppDispatch } from "../../../hooks/reduxHooks";
+import { setTextBgColor } from "../../../store/reducers/textbgColor";
+import { setTextColor } from "../../../store/reducers/textSoundColor";
 type ColorModalProps = {
   modalVisible: boolean;
   setModalVisible: (value: boolean) => void;
@@ -16,6 +19,7 @@ const ColorModal = ({
   type,
 }: ColorModalProps) => {
   const [selectValue, setSelectedValue] = useState("");
+  const dispatch = useAppDispatch();
   return (
     <Modal
       isVisible={modalVisible}
@@ -35,8 +39,10 @@ const ColorModal = ({
             setSelectedValue(itemValue);
             if (type == "bg") {
               await AsyncStorage.setItem("text-bg", itemValue);
+              dispatch(setTextBgColor(itemValue));
             } else {
               await AsyncStorage.setItem("text-color", itemValue);
+              dispatch(setTextColor(itemValue));
             }
           }}
           style={styles.picker}

@@ -1,8 +1,6 @@
 import { memo } from "react";
-import { Dimensions, Pressable, StyleSheet } from "react-native";
-import { Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import { QuranVerse } from "../../../lib/types/quranWordType";
-import { View } from "react-native";
 
 type VerseTextProps = {
   item: QuranVerse;

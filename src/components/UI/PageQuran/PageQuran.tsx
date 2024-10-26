@@ -11,6 +11,7 @@ import useFonts from "../../../hooks/useFonts";
 import VerseText from "../VerseText/VerseText";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { surahsData } from "../../../lib/utils/surahData";
+import { useAppSelector } from "../../../hooks/reduxHooks";
 
 const LINES_PER_PAGE = 15;
 // const heightDimension = Dimensions.get("window").height;
@@ -32,7 +33,8 @@ type PageQuranProps = {
   listenHandler: (
     item: QuranVerse,
     verse: QuranVerse[],
-    pageNumber: number
+    pageNumber: number,
+    levelNumber: string
   ) => void;
 };
 
@@ -40,20 +42,8 @@ const PageQuran = ({ dataPage, pageNumber, listenHandler }: PageQuranProps) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   const [soundsPlayingArr, setSoundsPlayingArr] = useState<QuranVerse[]>([]);
-
-  const [textColor, setTextColor] = useState<string>("#98FF98");
-  const [textBgColor, setTextBgColor] = useState<string>("");
-
-  // Function to fetch colors from AsyncStorage
-  const fetchColorTextFromStorage = async () => {
-    const storedTextColor = await AsyncStorage.getItem("text-color");
-    if (storedTextColor) setTextColor(storedTextColor);
-  };
-
-  const fetchBgTextFromStorage = async () => {
-    const storedBgColor = await AsyncStorage.getItem("text-bg");
-    if (storedBgColor) setTextBgColor(storedBgColor);
-  };
+  const textColor = useAppSelector((state) => state.textColor.color);
+  const textBgColor = useAppSelector((state) => state.textBgColor.color);
 
   const fontSize = calculateFontSize(); // Calculate font size
   const lineHeight = calculateLineHeight(); // Calculate line height
@@ -63,10 +53,8 @@ const PageQuran = ({ dataPage, pageNumber, listenHandler }: PageQuranProps) => {
       await useFonts([`QCF-${pageNumber}`]);
       setFontsLoaded(true);
     };
-    fetchColorTextFromStorage();
-    fetchBgTextFromStorage();
     loadFonts();
-  }, [pageNumber, fetchColorTextFromStorage, fetchBgTextFromStorage]);
+  }, [pageNumber]);
 
   if (!fontsLoaded) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -97,8 +85,14 @@ const PageQuran = ({ dataPage, pageNumber, listenHandler }: PageQuranProps) => {
     }
 
     setSoundsPlayingArr([...soundArr]);
+    console.log(soundsPlayingArr, "from here");
 
-    await listenHandler(itemVerse, dataPage, pageNumber);
+    await listenHandler(
+      itemVerse,
+      dataPage,
+      pageNumber,
+      levelNumber ? levelNumber : "1"
+    );
 
     setSoundsPlayingArr([]);
   };
