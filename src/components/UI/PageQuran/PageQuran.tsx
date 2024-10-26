@@ -229,6 +229,6 @@ const styles = StyleSheet.create({
     height: (windowHeight - 40 - 56 - 30) / 15,
     alignItems: "center",
     zIndex: 100,
-    paddingHorizontal: 5,
+    paddingHorizontal: 10,
   },
 });

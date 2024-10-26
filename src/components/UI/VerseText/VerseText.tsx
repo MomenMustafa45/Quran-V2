@@ -33,11 +33,13 @@ const VerseText = memo(
         style={[
           styles.customText,
           {
+            position: "relative",
             fontFamily: `QCF-${pageNumber}`,
             color,
             backgroundColor: bgColor,
             fontSize,
             lineHeight,
+            zIndex: 20000,
           },
         ]}
       >
