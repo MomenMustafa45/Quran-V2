@@ -17,7 +17,7 @@ const heightDimension = Dimensions.get("window").height;
 
 // Calculate font size based on screen height
 const calculateFontSize = () => {
-  const baseFontSize = heightDimension / (LINES_PER_PAGE * 2.8); // Adjust this divisor for more or less space
+  const baseFontSize = heightDimension / (LINES_PER_PAGE * 2.5); // Adjust this divisor for more or less space
   return Math.max(14, Math.min(baseFontSize, 22)); // Set min and max font sizes
 };
 
@@ -219,7 +219,6 @@ const styles = StyleSheet.create({
     position: "relative",
     flexDirection: "row-reverse",
     width: "100%",
-    justifyContent: "flex-start",
     height: (heightDimension - 40 - 56 - 30) / 15,
     alignItems: "center",
     zIndex: 100,

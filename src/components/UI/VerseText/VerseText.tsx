@@ -48,6 +48,7 @@ export default VerseText;
 
 const styles = StyleSheet.create({
   customText: {
+    display: "flex",
     flex: 1,
   },
 });
