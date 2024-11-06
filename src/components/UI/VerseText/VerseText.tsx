@@ -21,28 +21,30 @@ const VerseText = memo(
     bgColor,
     fontSize,
     lineHeight,
-  }: VerseTextProps) => (
-    <TouchableOpacity
-      onPress={() => {
-        listenHandler(item);
-      }}
-    >
-      <Text
-        style={[
-          styles.customText,
-          {
-            fontFamily: `QCF-${pageNumber}`,
-            color,
-            backgroundColor: bgColor,
-            fontSize,
-            lineHeight,
-          },
-        ]}
+  }: VerseTextProps) => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          listenHandler(item);
+        }}
       >
-        {item.code_v2}
-      </Text>
-    </TouchableOpacity>
-  )
+        <Text
+          style={[
+            styles.customText,
+            {
+              fontFamily: `QCF-${pageNumber}`,
+              color,
+              backgroundColor: bgColor,
+              fontSize,
+              lineHeight,
+            },
+          ]}
+        >
+          {item.code_v2}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
 );
 
 export default VerseText;

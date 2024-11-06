@@ -26,6 +26,7 @@ import { surahIndexHandler } from "../store/reducers/surahIndex";
 import { juzIndexHandler } from "../store/reducers/juzIndexSlice";
 import { pageIndexHandler } from "../store/reducers/pageIndexSlice";
 import { useGetColors } from "../lib/utils/setColorsFromStorage";
+import PageQuranWebView from "../components/UI/PageQuranWebView/PageQuranWebView";
 
 const width = Dimensions.get("window").width;
 
@@ -207,7 +208,7 @@ const Home = () => {
       const data = pageData[item];
       return data ? (
         <View style={styles.pageContainer}>
-          <PageQuran
+          <PageQuranWebView
             dataPage={data}
             pageNumber={604 - index}
             listenHandler={listenHandler}

@@ -20,7 +20,7 @@ const { height: windowHeight } = Dimensions.get("window");
 
 // Calculate font size and line height based on viewport height
 const calculateFontSize = () => {
-  return widthDimension * 0.05; // 3.2% of viewport height
+  return widthDimension * 0.06; // 3.2% of viewport height
 };
 
 const calculateLineHeight = () => {
@@ -129,9 +129,7 @@ const PageQuran = ({ dataPage, pageNumber, listenHandler }: PageQuranProps) => {
               styles.lineContainer,
               {
                 justifyContent:
-                  pageNumber == 1 || pageNumber == 2
-                    ? "center"
-                    : "space-between",
+                  pageNumber == 1 || pageNumber == 2 ? "center" : "center",
               },
             ]}
           >
