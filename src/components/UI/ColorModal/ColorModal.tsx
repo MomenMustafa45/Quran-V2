@@ -28,6 +28,7 @@ const ColorModal = ({
       backdropOpacity={0.5}
       onBackdropPress={() => setModalVisible(false)}
       style={styles.modalContainer}
+      useNativeDriver={true}
     >
       <View style={styles.modalContent}>
         <Text style={styles.label}>

@@ -119,7 +119,9 @@ const PageQuranWebView = ({
             display: flex;
             flex-direction: row-reverse;
             justify-content: ${
-              pageNumber == 2 || pageNumber == 1 ? "center" : "space-between"
+              pageNumber == 2 || pageNumber == 1 || pageNumber == 604
+                ? "center"
+                : "space-between"
             };
             align-items: flex-start;
             width: 100%;
@@ -136,13 +138,15 @@ const PageQuranWebView = ({
           .header-line, .bismillah-line {
             text-align: center;
             position:relative;
-            
+            height:6.5vh;
           }
        
           .surah-header {
-            font-size: 12vw;
+            font-size: 10vw;
             font-family:'SurahNames', sans-serif;
             text-align: center;
+            margin-top: ${pageNumber == 1 ? "-5vh" : "-3.5vh"};
+
           }
 
         .besmallah {
@@ -153,11 +157,11 @@ const PageQuranWebView = ({
 
         }
           .surah-name {
-            font-size: 8vw;
+            font-size: 6vw;
             font-family: 'SurahNames', sans-serif;
             position:absolute;
-            top:25%;
-          }
+            top: ${pageNumber == 1 ? "-20%" : "0%"};
+          }  
         
         </style>
         <script>

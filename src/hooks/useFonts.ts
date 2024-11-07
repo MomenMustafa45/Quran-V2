@@ -13,8 +13,11 @@ const useFonts = async (fontNames: string[]) => {
       case "Cairo-SemiBold":
         fontsToLoad.cairoSemiBold = require("../../assets/fonts/CairoSemiBold.ttf");
         break;
+      case "QCF-BSML":
+        fontsToLoad.surahNames = require("../../assets/fonts/QCF-BSML.ttf");
+        break;
       default:
-        fontsToLoad.cairoReg = require("../../assets/fonts/CairoRegular.ttf");
+        fontsToLoad.surahNames = require("../../assets/fonts/QCF-BSML.ttf");
         break;
     }
   });

@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   Text,
+  ScrollView,
 } from "react-native";
 import Modal from "react-native-modal";
 import TextReg from "../Texts/TextReg";
@@ -73,21 +74,33 @@ const SurahsModal = ({ goToPage }: IndexModalProps) => {
       backdropOpacity={0.5}
       onBackdropPress={closeModal}
       style={styles.modalContainer}
+      useNativeDriver={true}
     >
       <View style={styles.modalContent}>
         <View style={styles.modalHeader}>
           <TextReg styles="text-white">رقم الصفحة</TextReg>
           <TextReg styles="text-white">السورة</TextReg>
         </View>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={memoizedSurahsData}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          initialNumToRender={10} // Render 10 items initially for smoother performance
-          maxToRenderPerBatch={10} // Batch render 10 items at a time
-          windowSize={5} // Reduce memory usage by keeping 5 windows in the FlatList
-        />
+        <ScrollView>
+          {memoizedSurahsData.map((item, index) => (
+            <TouchableOpacity
+              onPress={() => handleIndexButton(item.start_page)}
+              key={item.id}
+            >
+              <View style={styles.listItem}>
+                <TextReg>{item.start_page.toString()}</TextReg>
+                <View className="flex-row">
+                  <Text style={{ fontFamily: "surahNames" }}>
+                    {item.name_code}
+                  </Text>
+                  <TextReg>
+                    <>.{index + 1}</>
+                  </TextReg>
+                </View>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
     </Modal>
   );
@@ -123,7 +136,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     backgroundColor: "#34A853",
-    height: 40,
     padding: 10,
   },
 });

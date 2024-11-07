@@ -1,5 +1,11 @@
 import React, { useCallback, useMemo } from "react";
-import { StyleSheet, View, FlatList, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import Modal from "react-native-modal";
 import TextReg from "../Texts/TextReg";
 import { parts } from "../../../lib/utils/partData";
@@ -65,21 +71,30 @@ const JuzModal = ({ goToPage }: IndexModalProps) => {
       backdropOpacity={0.5}
       onBackdropPress={closeModal}
       style={styles.modalContainer}
+      useNativeDriver={true}
     >
       <View style={styles.modalContent}>
         <View style={styles.modalHeader}>
           <TextReg styles="text-white">رقم الصفحة</TextReg>
           <TextReg styles="text-white">الجزء</TextReg>
         </View>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={memoizedParts}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          initialNumToRender={10} // Render 10 items initially for smoother performance
-          maxToRenderPerBatch={10} // Batch render 10 items at a time
-          windowSize={5} // Reduce memory usage by managing offscreen rendering
-        />
+        <ScrollView>
+          {memoizedParts.map((item, index) => (
+            <TouchableOpacity
+              onPress={() => handleIndexButton(item.startPage)}
+              key={item.title}
+            >
+              <View style={styles.listItem}>
+                <TextReg>{item.startPage.toString()}</TextReg>
+                <TextReg>
+                  <>
+                    {index + 1}.{item.title}
+                  </>
+                </TextReg>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
     </Modal>
   );
@@ -122,6 +137,5 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: "#34A853",
     padding: 10,
-    height: 40,
   },
 });
