@@ -64,6 +64,7 @@ const Home = () => {
           return map;
         }, {} as Record<string, any>);
         setPageData(pageDataMap);
+        setIsGettingMoreAudios(false);
       } catch (error) {
         console.error("Error loading Quran pages:", error);
       } finally {

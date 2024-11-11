@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "Quran",
-    "slug": "Quran",
+    "name": "مصحف المسلمين",
+    "slug": "مصحف المسلمين",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/app-icon.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true

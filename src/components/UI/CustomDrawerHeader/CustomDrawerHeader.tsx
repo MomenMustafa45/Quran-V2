@@ -24,7 +24,7 @@ const CustomDrawerHeader = () => {
   };
 
   return (
-    <View className=" relative flex flex-row px-3 justify-between h-10 items-center">
+    <View className=" relative flex flex-row px-3 justify-between h-14 items-center">
       <LinearGradient
         // Background Linear Gradient
         colors={[
@@ -52,17 +52,18 @@ const CustomDrawerHeader = () => {
         <Entypo name="menu" size={22} color="white" />
       </TouchableOpacity>
       <View>
-        <TextReg styles="text-[10px] text-white">
+        <TextReg styles="text-[12px] text-white">
           <>الجزء {parts[juzIndex ? juzIndex - 1 : 0].title}</>
         </TextReg>
       </View>
-      <TextReg styles="text-white">مصحف المسلمين</TextReg>
+      <TextReg styles="text-white font-bold text-xl">مصحف المسلمين</TextReg>
       <View className="flex-row items-center">
         <Text
           style={{
             fontFamily: "surahNames",
             paddingTop: 5,
             color: "white",
+            fontSize: 16,
           }}
         >
           {surahsData[surahIndex ? surahIndex - 1 : 0]?.name_code} \

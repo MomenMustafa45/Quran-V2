@@ -7,6 +7,7 @@ import TextSemiBold from "../Texts/TextSemiBold";
 import { RootNavigationParamList } from "../../../navigation/Stack";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import ColorIcon from "../../../../assets/images/colorIcon.svg";
+import BgColorIcon from "../../../../assets/icons/bg-text-color2.svg";
 import MoshafIcon from "../../../../assets/images/moshafIcon.svg";
 import ColorModal from "../ColorModal/ColorModal";
 
@@ -88,7 +89,7 @@ const TabsNavigation = () => {
             setBgModalVisible(true);
           }}
         >
-          <ColorIcon />
+          <BgColorIcon />
         </TouchableOpacity>
 
         <TouchableOpacity
