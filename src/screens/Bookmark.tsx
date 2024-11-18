@@ -56,7 +56,9 @@ const Bookmark = () => {
             <BookmarkItem item={item} deleteBookmark={deleteBookmark} />
           )}
           ListEmptyComponent={
-            <TextReg styles="text-center">No bookmarks found</TextReg>
+            <TextReg styles={{ textAlign: "center" }}>
+              No bookmarks found
+            </TextReg>
           }
         />
       </View>

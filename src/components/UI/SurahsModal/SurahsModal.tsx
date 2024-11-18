@@ -12,6 +12,7 @@ import TextReg from "../Texts/TextReg";
 import { surahsData } from "../../../lib/utils/surahData";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { closeSurahModal } from "../../../store/reducers/surahIndex";
+import { pageIndexHandler } from "../../../store/reducers/pageIndexSlice";
 
 type IndexModalProps = {
   goToPage: (index: number) => void;
@@ -31,6 +32,7 @@ const SurahsModal = ({ goToPage }: IndexModalProps) => {
   const handleIndexButton = (item: number) => {
     goToPage(item);
     dispatch(closeSurahModal());
+    dispatch(pageIndexHandler(604 - item));
   };
 
   const renderItem = useCallback(
@@ -44,7 +46,7 @@ const SurahsModal = ({ goToPage }: IndexModalProps) => {
       <TouchableOpacity onPress={() => handleIndexButton(item.start_page)}>
         <View style={styles.listItem}>
           <TextReg>{item.start_page.toString()}</TextReg>
-          <View className="flex-row">
+          <View style={{ flexDirection: "row" }}>
             <Text style={{ fontFamily: "surahNames" }}>{item.name_code}</Text>
             <TextReg>
               <>.{index + 1}</>
@@ -78,8 +80,8 @@ const SurahsModal = ({ goToPage }: IndexModalProps) => {
     >
       <View style={styles.modalContent}>
         <View style={styles.modalHeader}>
-          <TextReg styles="text-white">رقم الصفحة</TextReg>
-          <TextReg styles="text-white">السورة</TextReg>
+          <TextReg styles={{ color: "white" }}>رقم الصفحة</TextReg>
+          <TextReg styles={{ color: "white" }}>السورة</TextReg>
         </View>
         <ScrollView>
           {memoizedSurahsData.map((item, index) => (
@@ -89,7 +91,7 @@ const SurahsModal = ({ goToPage }: IndexModalProps) => {
             >
               <View style={styles.listItem}>
                 <TextReg>{item.start_page.toString()}</TextReg>
-                <View className="flex-row">
+                <View style={{ flexDirection: "row" }}>
                   <Text style={{ fontFamily: "surahNames" }}>
                     {item.name_code}
                   </Text>

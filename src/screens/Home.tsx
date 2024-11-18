@@ -27,6 +27,8 @@ import { juzIndexHandler } from "../store/reducers/juzIndexSlice";
 import { pageIndexHandler } from "../store/reducers/pageIndexSlice";
 import { useGetColors } from "../lib/utils/setColorsFromStorage";
 import PageQuranWebView from "../components/UI/PageQuranWebView/PageQuranWebView";
+import PageModal from "../components/UI/PageModal/PageModal";
+import TextBold from "../components/UI/Texts/TextBold";
 
 const width = Dimensions.get("window").width;
 
@@ -243,9 +245,9 @@ const Home = () => {
         {isGettingMoreAudios && (
           <View style={styles.audioLoading}>
             <ActivityIndicator size="small" color="#fff" />
-            <TextReg styles="text-xs mx-2 text-white text-bold pt-1">
+            <TextBold styles={{ fontSize: 12, color: "white", paddingTop: 4 }}>
               جاري تحميل الصوتيات
-            </TextReg>
+            </TextBold>
           </View>
         )}
         <FlatList
@@ -277,6 +279,7 @@ const Home = () => {
 
       <JuzModal goToPage={scrollToIndex} />
       <SurahsModal goToPage={scrollToIndex} />
+      <PageModal goToPage={scrollToIndex} />
       <TabsNavigation />
     </>
   );

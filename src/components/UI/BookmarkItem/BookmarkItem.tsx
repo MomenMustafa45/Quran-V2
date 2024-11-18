@@ -4,7 +4,6 @@ import { TouchableOpacity } from "react-native";
 import { StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { RootNavigationParamList } from "../../../navigation/Stack";
-import TextReg from "../Texts/TextReg";
 import { AntDesign } from "@expo/vector-icons";
 
 type BookmarkItem = {
@@ -22,8 +21,7 @@ const BookmarkItem = ({ item, deleteBookmark }: BookmarkItem) => {
   return (
     <TouchableOpacity
       onPress={() => handleNavigateToPage(604 - item.pageNumber)}
-      className="flex-row justify-between items-center"
-      style={{ borderBottomWidth: 1, borderBottomColor: "#ccc" }}
+      style={styles.container}
     >
       <TouchableOpacity onPress={() => deleteBookmark(item)}>
         <AntDesign name="delete" size={24} color="red" />
@@ -45,7 +43,13 @@ const BookmarkItem = ({ item, deleteBookmark }: BookmarkItem) => {
 export default BookmarkItem;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
+  container: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   bookmarkItem: {
     paddingVertical: 16,
   },

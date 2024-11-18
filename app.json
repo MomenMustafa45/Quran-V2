@@ -1,17 +1,25 @@
 {
   "expo": {
     "name": "مصحف المسلمين",
-    "slug": "مصحف المسلمين",
+    "slug": "mushaf-almuslimin",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/app-icon.png",
     "userInterfaceStyle": "light",
+
     "ios": {
       "supportsTablet": true
     },
-    "android": {},
+    "android": {
+      "package": "com.momenmustafa.mushafalmuslimin"
+    },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "614e751e-8801-4573-b29d-b7d1d8ef5ab5"
+      }
     }
   }
 }

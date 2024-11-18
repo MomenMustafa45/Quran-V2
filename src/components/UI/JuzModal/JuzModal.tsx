@@ -1,16 +1,13 @@
 import React, { useCallback, useMemo } from "react";
-import {
-  StyleSheet,
-  View,
-  FlatList,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity, ScrollView } from "react-native";
 import Modal from "react-native-modal";
 import TextReg from "../Texts/TextReg";
-import { parts } from "../../../lib/utils/partData";
+import { mushafFirstTenJuz } from "../../../lib/utils/partData";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { closeJuzModal } from "../../../store/reducers/juzIndexSlice";
+import { pageIndexHandler } from "../../../store/reducers/pageIndexSlice";
+import JuzItem from "./JuzItem/JuzItem";
+import HeaderItem from "./JuzItem/HeaderItem";
 
 type IndexModalProps = {
   goToPage: (index: number) => void;
@@ -30,38 +27,11 @@ const JuzModal = ({ goToPage }: IndexModalProps) => {
   const handleIndexButton = (item: number) => {
     goToPage(item);
     dispatch(closeJuzModal());
+    dispatch(pageIndexHandler(604 - item));
   };
 
-  // Memoize the renderItem function to avoid unnecessary re-renders
-  const renderItem = useCallback(
-    ({
-      item,
-      index,
-    }: {
-      item: { startPage: number; title: string };
-      index: number;
-    }) => (
-      <TouchableOpacity onPress={() => handleIndexButton(item.startPage)}>
-        <View style={styles.listItem}>
-          <TextReg>{item.startPage.toString()}</TextReg>
-          <TextReg>
-            <>
-              {index + 1}.{item.title}
-            </>
-          </TextReg>
-        </View>
-      </TouchableOpacity>
-    ),
-    [handleIndexButton]
-  );
-  // Memoized keyExtractor to avoid re-creating it
-  const keyExtractor = useCallback(
-    (_: {}, index: number) => index.toString(),
-    []
-  );
-
   // Memoize parts data to prevent re-computation
-  const memoizedParts = useMemo(() => parts, []);
+  const memoizedParts = useMemo(() => mushafFirstTenJuz, []);
 
   return (
     <Modal
@@ -74,25 +44,30 @@ const JuzModal = ({ goToPage }: IndexModalProps) => {
       useNativeDriver={true}
     >
       <View style={styles.modalContent}>
-        <View style={styles.modalHeader}>
-          <TextReg styles="text-white">رقم الصفحة</TextReg>
-          <TextReg styles="text-white">الجزء</TextReg>
-        </View>
-        <ScrollView>
-          {memoizedParts.map((item, index) => (
-            <TouchableOpacity
-              onPress={() => handleIndexButton(item.startPage)}
-              key={item.title}
+        <View style={[styles.modalHeader]}>
+          <View style={{ flex: 3, flexDirection: "row" }}>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
             >
-              <View style={styles.listItem}>
-                <TextReg>{item.startPage.toString()}</TextReg>
-                <TextReg>
-                  <>
-                    {index + 1}.{item.title}
-                  </>
-                </TextReg>
-              </View>
-            </TouchableOpacity>
+              <HeaderItem text="الصفحة" />
+              <HeaderItem text="الربع" />
+            </View>
+            <HeaderItem text="الحزب" />
+          </View>
+          <HeaderItem text="الجزء" />
+        </View>
+        {/* modal header */}
+        <ScrollView>
+          {memoizedParts.map((item) => (
+            <JuzItem
+              item={item}
+              key={item.juzId}
+              goToPage={handleIndexButton}
+            />
           ))}
         </ScrollView>
       </View>
@@ -108,7 +83,7 @@ const styles = StyleSheet.create({
     display: "flex",
   },
   modalContent: {
-    width: 220,
+    width: "75%",
     height: "100%",
     backgroundColor: "white",
     display: "flex",
@@ -134,8 +109,7 @@ const styles = StyleSheet.create({
   modalHeader: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
     backgroundColor: "#34A853",
-    padding: 10,
+    paddingVertical: 10,
   },
 });

@@ -58,16 +58,27 @@ const Splash = () => {
   }, [fadeAnim, scaleAnim, navigate]);
 
   return (
-    <View className="flex-1 relative">
-      <View className="absolute top-0 left-0 w-full h-full bg-[#024F41] justify-center items-center">
+    <View style={{ flex: 1, position: "relative" }}>
+      <View
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "#024F41",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <ImageBackground
           source={require("../../assets/images/cover.png")}
           resizeMode="cover"
-          className="flex-1 w-full"
+          style={{ flex: 1, width: "100%" }}
         />
       </View>
 
-      <View className="flex flex-1 items-center justify-center">
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         {/* Apply the fade and scale animations to the image */}
         <Animated.Image
           source={require("../../assets/images/moshaf.png")}
@@ -78,7 +89,7 @@ const Splash = () => {
         />
         {/* Apply fade animation to text */}
         <Animated.View style={{ opacity: fadeAnim }}>
-          <TextBold styles="text-text-color">مصحف المسلمين</TextBold>
+          <TextBold styles={{ color: "#074a3e" }}>مصحف المسلمين</TextBold>
         </Animated.View>
       </View>
     </View>

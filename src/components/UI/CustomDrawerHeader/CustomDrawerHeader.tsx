@@ -9,6 +9,7 @@ import { openJuzModal } from "../../../store/reducers/juzIndexSlice";
 import { handleBookmark } from "../../../services/bookmarkServices";
 import { surahsData } from "../../../lib/utils/surahData";
 import { parts } from "../../../lib/utils/partData";
+import TextBold from "../Texts/TextBold";
 
 const CustomDrawerHeader = () => {
   const pageIndex = useAppSelector((state) => state.pageIndex.value);
@@ -24,7 +25,17 @@ const CustomDrawerHeader = () => {
   };
 
   return (
-    <View className=" relative flex flex-row px-3 justify-between h-14 items-center">
+    <View
+      style={{
+        position: "relative",
+        flexDirection: "row",
+        paddingLeft: 12,
+        paddingRight: 12,
+        justifyContent: "space-between",
+        height: 56,
+        alignItems: "center",
+      }}
+    >
       <LinearGradient
         // Background Linear Gradient
         colors={[
@@ -52,12 +63,14 @@ const CustomDrawerHeader = () => {
         <Entypo name="menu" size={22} color="white" />
       </TouchableOpacity>
       <View>
-        <TextReg styles="text-[12px] text-white">
+        <TextReg styles={{ fontSize: 12, color: "white" }}>
           <>الجزء {parts[juzIndex ? juzIndex - 1 : 0].title}</>
         </TextReg>
       </View>
-      <TextReg styles="text-white font-bold text-xl">مصحف المسلمين</TextReg>
-      <View className="flex-row items-center">
+      <TextBold styles={{ color: "white", fontSize: 20 }}>
+        مصحف المسلمين
+      </TextBold>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text
           style={{
             fontFamily: "surahNames",

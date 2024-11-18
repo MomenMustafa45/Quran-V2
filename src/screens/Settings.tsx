@@ -1,28 +1,36 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 import { Picker } from "@react-native-picker/picker"; // Import Picker
 import TabsNavigation from "../components/UI/TabsNavigation/TabsNavigation";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setTextBgColor } from "../store/reducers/textbgColor";
+import { useAppDispatch } from "../hooks/reduxHooks";
+import { setPageColor } from "../store/reducers/pageColorSlice";
 
 const Settings = () => {
-  const [selectedLevel, setSelectedLevel] = useState("1"); // Default level is 1
-  const [selectedSurah, setSelectedSurah] = useState("1"); // Default surah is 1
+  const [selectedLevel, setSelectedLevel] = useState("1");
+  const [selectedWordColor, setSelectedWordColor] = useState("");
+  const [selectedWordBgColor, setSelectedWordBgColor] = useState("");
+  const [selectedPageColor, setSelectedPageColor] = useState("");
 
-  // Dummy list of surahs for now, you can replace it with actual surah data
-  const surahs = [
-    { id: "1", name: "الفاتحة" },
-    { id: "2", name: "البقرة" },
-    { id: "3", name: "ال عمران" },
-    // Add more surahs as needed
+  const dispatch = useAppDispatch();
+
+  const wordsColor = [
+    { id: "1", name: "اللون الاخضر", value: "#98FF98" },
+    { id: "2", name: "اللون الاحمر", value: "#DC143C" },
+    { id: "3", name: "اللون الاصفر", value: "#FFD700" },
+    { id: "4", name: "اللون البنفسجي", value: "#7851A9" },
   ];
 
-  const handleDownloadAllAudio = () => {
-    console.log("Downloading audio for all Quran surahs...");
-    // Implement the logic to download all audio
-  };
-
-  const handleDownloadSurahAudio = () => {
-    console.log(`Downloading audio for surah ID ${selectedSurah}...`);
-    // Implement the logic to download audio for the selected surah
+  const LEVEL_SOUND_KEY = "levelSound";
+  // Handle press to cycle through levels and store the new level
+  const handlePressLevel = async (item: number) => {
+    try {
+      setSelectedLevel(item.toString());
+      await AsyncStorage.setItem(LEVEL_SOUND_KEY, item.toString());
+    } catch (error) {
+      console.error("Error handling level press:", error);
+    }
   };
 
   return (
@@ -33,7 +41,9 @@ const Settings = () => {
           <Text style={styles.label}>أختر مستوي استماع الاية:</Text>
           <Picker
             selectedValue={selectedLevel}
-            onValueChange={(itemValue) => setSelectedLevel(itemValue)}
+            onValueChange={(itemValue) => {
+              handlePressLevel(parseInt(itemValue));
+            }}
             style={styles.picker}
           >
             <Picker.Item label="المستوي الاول" value="1" />
@@ -42,25 +52,62 @@ const Settings = () => {
           </Picker>
         </View>
 
-        {/* Download Audio for Selected Surah */}
+        {/* choose word color */}
         <View style={styles.settingItem}>
-          <Text style={styles.label}>تحميل صوتيات السور:</Text>
+          <Text style={styles.label}>اختيار لون الكلمة</Text>
           <Picker
-            selectedValue={selectedSurah}
-            onValueChange={(itemValue) => setSelectedSurah(itemValue)}
+            selectedValue={selectedWordColor}
+            onValueChange={async (itemValue) => {
+              await AsyncStorage.setItem("text-bg", itemValue);
+              dispatch(setTextBgColor(itemValue));
+              setSelectedWordColor(itemValue);
+            }}
             style={styles.picker}
           >
-            {surahs.map((surah) => (
-              <Picker.Item key={surah.id} label={surah.name} value={surah.id} />
+            {wordsColor.map((item) => (
+              <Picker.Item key={item.id} label={item.name} value={item.value} />
             ))}
           </Picker>
         </View>
+        {/* choose word bg color */}
+        <View style={styles.settingItem}>
+          <Text style={styles.label}>اختيار خلفية الكلمة</Text>
+          <Picker
+            selectedValue={selectedWordBgColor}
+            onValueChange={async (itemValue) => {
+              await AsyncStorage.setItem("text-bg", itemValue);
+              dispatch(setTextBgColor(itemValue));
+              setSelectedWordBgColor(itemValue);
+            }}
+            style={styles.picker}
+          >
+            {wordsColor.map((item) => (
+              <Picker.Item key={item.id} label={item.name} value={item.value} />
+            ))}
+          </Picker>
+        </View>
+
+        {/* choose Page bg color */}
+        <View style={styles.settingItem}>
+          <Text style={styles.label}>اختيار خلفية الصفحة</Text>
+          <Picker
+            selectedValue={selectedPageColor}
+            onValueChange={async (itemValue) => {
+              await AsyncStorage.setItem("page-color", itemValue);
+              dispatch(setPageColor(itemValue));
+              setSelectedPageColor(itemValue);
+            }}
+            style={styles.picker}
+          >
+            <Picker.Item label={"اللون الافتراضي"} value={"white"} />
+            {wordsColor.map((item) => (
+              <Picker.Item key={item.id} label={item.name} value={item.value} />
+            ))}
+          </Picker>
+        </View>
+
         <View>
-          <Button
-            title="تحميل"
-            color="#08AD4A"
-            onPress={handleDownloadSurahAudio}
-          />
+          <Button title="حفظ" color="#08AD4A" />
         </View>
       </View>
       <TabsNavigation />

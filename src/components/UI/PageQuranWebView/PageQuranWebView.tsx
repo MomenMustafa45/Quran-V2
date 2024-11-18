@@ -33,6 +33,7 @@ const PageQuranWebView = ({
   const webViewRef = useRef(null);
   const textColor = useAppSelector((state) => state.textColor.color);
   const textBgColor = useAppSelector((state) => state.textBgColor.color);
+  const pageColor = useAppSelector((state) => state.pageColor.color);
 
   const base64BSML = loadHeaderFont();
 
@@ -54,17 +55,19 @@ const PageQuranWebView = ({
   const getQuranHTML = () => {
     let outputHTML = "";
     for (let index = 0; index < LINES_PER_PAGE; index++) {
-      const currentLine = dataPage.filter(
-        (item) => item.line_number === index + 1
-      );
+      const currentLine = dataPage.filter((item) => item.line_v2 === index + 1);
+      const surahFilter = dataPage.filter(
+        (item) => item.location_v2 == `${pageNumber}:${index + 1}:0`
+      )[0];
+
       const forceEmptyLines =
         (pageNumber === 1 && index + 1 > 8) ||
         (pageNumber === 2 && index + 1 > 7);
 
       if (forceEmptyLines) {
         outputHTML += `<div class="line"></div>`;
-      } else if (currentLine.length === 1 && !currentLine[0].verse_id) {
-        const surah = surahsData[currentLine[0].chapter_id - 1];
+      } else if (surahFilter) {
+        const surah = surahsData[surahFilter.chapter_id - 1];
         outputHTML += `
           <div class="header-line">
             <span class="surah-header" >ò</span>
@@ -114,6 +117,7 @@ const PageQuranWebView = ({
             display: flex;
             flex-direction: column;
             margin: 30px;
+            background-color:${pageColor};
           }
           .line, .verse-line, .bismillah-line {
             display: flex;

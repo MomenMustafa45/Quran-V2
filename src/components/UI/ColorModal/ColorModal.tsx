@@ -1,25 +1,17 @@
-import { Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { Button, Text, View } from "react-native";
+import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import Modal from "react-native-modal";
 import { Picker } from "@react-native-picker/picker";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useAppDispatch } from "../../../hooks/reduxHooks";
-import { setTextBgColor } from "../../../store/reducers/textbgColor";
-import { setTextColor } from "../../../store/reducers/textSoundColor";
+
 type ColorModalProps = {
   modalVisible: boolean;
   setModalVisible: (value: boolean) => void;
-  type: "text" | "bg";
 };
 
-const ColorModal = ({
-  modalVisible,
-  setModalVisible,
-  type,
-}: ColorModalProps) => {
-  const [selectValue, setSelectedValue] = useState("");
-  const dispatch = useAppDispatch();
+const ColorModal = ({ modalVisible, setModalVisible }: ColorModalProps) => {
+  const [selectWordBgColor, setSelectWordBgColor] = useState("");
+  const [selectWordColor, setSelectWordColor] = useState("");
   return (
     <Modal
       isVisible={modalVisible}
@@ -31,28 +23,95 @@ const ColorModal = ({
       useNativeDriver={true}
     >
       <View style={styles.modalContent}>
-        <Text style={styles.label}>
-          {type == "text" ? "لون" : "لون خلفية"} الكلمة
-        </Text>
-        <Picker
-          selectedValue={selectValue}
-          onValueChange={async (itemValue) => {
-            setSelectedValue(itemValue);
-            if (type == "bg") {
-              await AsyncStorage.setItem("text-bg", itemValue);
-              dispatch(setTextBgColor(itemValue));
-            } else {
-              await AsyncStorage.setItem("text-color", itemValue);
-              dispatch(setTextColor(itemValue));
-            }
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 10,
           }}
-          style={styles.picker}
         >
-          <Picker.Item label="اللون الاخضر" value="#98FF98" />
-          <Picker.Item label="اللون الاحمر" value="#DC143C" />
-          <Picker.Item label="اللون الاصفر" value="#FFD700" />
-          <Picker.Item label="اللون البنفسجي" value="#7851A9" />
-        </Picker>
+          {/* word bg color */}
+          <View
+            style={{
+              flex: 1,
+              borderRightWidth: 1,
+              borderRightColor: "#08AD4A",
+            }}
+          >
+            <Text style={styles.label}>لون خلفية الكلمة</Text>
+            <Picker
+              selectedValue={selectWordBgColor}
+              onValueChange={(itemValue) => {
+                setSelectWordBgColor(itemValue);
+              }}
+              style={styles.picker}
+            >
+              <Picker.Item
+                style={{ fontSize: 10 }}
+                label="الاخضر"
+                value="#98FF98"
+              />
+              <Picker.Item
+                style={{ fontSize: 10 }}
+                label="الاحمر"
+                value="#DC143C"
+              />
+              <Picker.Item
+                style={{ fontSize: 10 }}
+                label="الاصفر"
+                value="#FFD700"
+              />
+              <Picker.Item
+                style={{ fontSize: 10 }}
+                label="البنفسجي"
+                value="#7851A9"
+              />
+            </Picker>
+          </View>
+          {/*  */}
+          {/* word color */}
+
+          <View style={{ flex: 1 }}>
+            <Text style={styles.label}>لون الكلمة</Text>
+            <Picker
+              selectedValue={selectWordColor}
+              onValueChange={(itemValue) => {
+                setSelectWordColor(itemValue);
+              }}
+              style={styles.picker}
+            >
+              <Picker.Item
+                label="الاخضر"
+                value="#98FF98"
+                style={{ fontSize: 10 }}
+              />
+              <Picker.Item
+                label="الاحمر"
+                value="#DC143C"
+                style={{ fontSize: 10 }}
+              />
+              <Picker.Item
+                label="الاصفر"
+                value="#FFD700"
+                style={{ fontSize: 10 }}
+              />
+              <Picker.Item
+                label="البنفسجي"
+                value="#7851A9"
+                style={{ fontSize: 10 }}
+              />
+            </Picker>
+          </View>
+          {/*  */}
+        </View>
+        <View>
+          <Button
+            title="حفظ"
+            color="#08AD4A"
+            onPress={() => setModalVisible(false)}
+          />
+        </View>
       </View>
     </Modal>
   );
@@ -78,6 +137,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 10,
+    textAlign: "center",
   },
   picker: {
     height: 50,

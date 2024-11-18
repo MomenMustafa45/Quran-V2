@@ -3,10 +3,12 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 export interface PageIndexState {
   value: number;
+  indexModalVisible: boolean;
 }
 
 const initialState: PageIndexState = {
   value: 0,
+  indexModalVisible: false,
 };
 
 export const pageIndexSlice = createSlice({
@@ -16,10 +18,17 @@ export const pageIndexSlice = createSlice({
     pageIndexHandler: (state, action: PayloadAction<number>) => {
       state.value = action.payload;
     },
+    openIndexModal: (state) => {
+      state.indexModalVisible = true;
+    },
+    closeIndexModal: (state) => {
+      state.indexModalVisible = false;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { pageIndexHandler } = pageIndexSlice.actions;
+export const { pageIndexHandler, openIndexModal, closeIndexModal } =
+  pageIndexSlice.actions;
 
 export default pageIndexSlice.reducer;

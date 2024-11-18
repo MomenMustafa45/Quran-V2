@@ -4,6 +4,7 @@ import surahIndexSlice from "./reducers/surahIndex";
 import juzIndexSlice from "./reducers/juzIndexSlice";
 import textColorSlice from "./reducers/textSoundColor";
 import textBgColorSlice from "./reducers/textbgColor";
+import pageColorSlice from "./reducers/pageColorSlice";
 // ...
 
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
     juzIndex: juzIndexSlice,
     textColor: textColorSlice,
     textBgColor: textBgColorSlice,
+    pageColor: pageColorSlice,
   },
 });
 

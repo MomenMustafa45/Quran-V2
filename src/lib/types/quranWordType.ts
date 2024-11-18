@@ -1,4 +1,5 @@
 export type QuranVerse = {
+  line_v2: number;
   id: number;
   text_uthmani: string;
   code_v2: string;

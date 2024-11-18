@@ -1,17 +1,13 @@
-import { View, Text } from "react-native";
+import { View, Text, TextStyle } from "react-native";
 import React from "react";
 
 type TextBoldProps = {
   children: React.ReactElement | string;
-  styles?: string;
+  styles?: TextStyle;
 };
 
 const TextBold = ({ children, styles }: TextBoldProps) => {
-  return (
-    <Text style={{ fontFamily: "cairoBold" }} className={`${styles}`}>
-      {children}
-    </Text>
-  );
+  return <Text style={{ fontFamily: "cairoBold", ...styles }}>{children}</Text>;
 };
 
 export default TextBold;
