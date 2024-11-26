@@ -6,20 +6,35 @@
     "orientation": "portrait",
     "icon": "./assets/app-icon.png",
     "userInterfaceStyle": "light",
-
+    "splash": {
+      "image": "./assets/app-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "androidStatusBar": {
+      "backgroundColor": "#ffffff",
+      "barStyle": "dark-content",
+      "translucent": false
+    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.momenmustafa.mushafalmuslimin"
     },
     "android": {
-      "package": "com.momenmustafa.mushafalmuslimin"
+      "package": "com.momenmustafa.mushafalmuslimin",
+      "permissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "614e751e-8801-4573-b29d-b7d1d8ef5ab5"
+        "projectId": "2f7c4b8e-d573-4358-b4bd-d975163e6744"
       }
-    }
+    },
+    "owner": "moaddi"
   }
 }

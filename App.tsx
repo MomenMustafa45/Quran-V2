@@ -3,7 +3,13 @@ import { NavigationContainer } from "@react-navigation/native";
 import StackNavigation from "./src/navigation/Stack";
 import useFonts from "./src/hooks/useFonts";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { ActivityIndicator, StatusBar, View } from "react-native";
+import {
+  ActivityIndicator,
+  StatusBar,
+  View,
+  I18nManager,
+  AppRegistry,
+} from "react-native";
 import Toast from "react-native-toast-message";
 import { Provider } from "react-redux";
 import { store } from "./src/store/store";
@@ -21,16 +27,29 @@ export default function App() {
   };
 
   useEffect(() => {
-    const loadFonts = async () => {
-      try {
-        await loadResourcesAsync();
-        setIsReady(true);
-      } catch (e) {
-        console.warn(e);
-      }
-    };
+    // Force LTR layout direction and prevent RTL
+    if (I18nManager.isRTL) {
+      I18nManager.forceRTL(false);
+      I18nManager.allowRTL(false);
 
-    loadFonts();
+      // Restart the app programmatically
+      setTimeout(() => {
+        const RootComponent = require("./App").default;
+        AppRegistry.registerComponent("main", () => RootComponent);
+      }, 100);
+    } else {
+      // Load fonts after enforcing layout direction
+      const loadFonts = async () => {
+        try {
+          await loadResourcesAsync();
+          setIsReady(true);
+        } catch (e) {
+          console.warn(e);
+        }
+      };
+
+      loadFonts();
+    }
   }, []);
 
   if (!isReady) {
@@ -44,7 +63,7 @@ export default function App() {
   return (
     <SafeAreaProvider style={{ flex: 1 }}>
       <Provider store={store}>
-        <StatusBar />
+        <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
         <NavigationContainer>
           <StackNavigation />
         </NavigationContainer>

@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
-import { Picker } from "@react-native-picker/picker"; // Import Picker
+import React, { useState } from "react";
+import { View, Text, Button, StyleSheet, ScrollView } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import TabsNavigation from "../components/UI/TabsNavigation/TabsNavigation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setTextBgColor } from "../store/reducers/textbgColor";
@@ -35,7 +35,7 @@ const Settings = () => {
 
   return (
     <>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         {/* Select Listen Words Level */}
         <View style={styles.settingItem}>
           <Text style={styles.label}>أختر مستوي استماع الاية:</Text>
@@ -58,7 +58,7 @@ const Settings = () => {
           <Picker
             selectedValue={selectedWordColor}
             onValueChange={async (itemValue) => {
-              await AsyncStorage.setItem("text-bg", itemValue);
+              await AsyncStorage.setItem("text-color", itemValue);
               dispatch(setTextBgColor(itemValue));
               setSelectedWordColor(itemValue);
             }}
@@ -106,10 +106,10 @@ const Settings = () => {
           </Picker>
         </View>
 
-        <View>
+        <View style={{ paddingBottom: 56 }}>
           <Button title="حفظ" color="#08AD4A" />
         </View>
-      </View>
+      </ScrollView>
       <TabsNavigation />
     </>
   );

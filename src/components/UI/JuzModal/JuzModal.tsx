@@ -13,6 +13,8 @@ type IndexModalProps = {
   goToPage: (index: number) => void;
 };
 
+export type MushafJuzs = (typeof mushafFirstTenJuz)[0];
+
 const JuzModal = ({ goToPage }: IndexModalProps) => {
   const modalVisible = useAppSelector(
     (state) => state.juzIndex.juzModalVisible
@@ -45,20 +47,25 @@ const JuzModal = ({ goToPage }: IndexModalProps) => {
     >
       <View style={styles.modalContent}>
         <View style={[styles.modalHeader]}>
-          <View style={{ flex: 3, flexDirection: "row" }}>
+          <View style={{ flex: 4, flexDirection: "row" }}>
             <View
               style={{
-                flex: 1,
+                flex: 2,
                 flexDirection: "row",
                 justifyContent: "space-between",
               }}
             >
-              <HeaderItem text="الصفحة" />
+              <HeaderItem text="نهاية" />
+              <HeaderItem text="بدء " />
               <HeaderItem text="الربع" />
             </View>
-            <HeaderItem text="الحزب" />
+            <View style={{ flex: 1 }}>
+              <HeaderItem text="الحزب" />
+            </View>
           </View>
-          <HeaderItem text="الجزء" />
+          <View style={{ flex: 1 }}>
+            <HeaderItem text="الجزء" />
+          </View>
         </View>
         {/* modal header */}
         <ScrollView>

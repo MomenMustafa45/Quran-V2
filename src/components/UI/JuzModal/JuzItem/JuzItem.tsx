@@ -1,22 +1,10 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import TextReg from "../../Texts/TextReg";
+import { MushafJuzs } from "../JuzModal";
 
 type JuzItemProps = {
-  item: {
-    juzId: number;
-    juzName: string;
-    pageNumber: number;
-    hezbs: {
-      hezId: number;
-      hezbName: string;
-      pageNumber: number;
-      quarters: {
-        quarterName: string;
-        pageNumber: number;
-      }[];
-    }[];
-  };
+  item: MushafJuzs;
   goToPage: (item: number) => void;
 };
 
@@ -30,7 +18,7 @@ const JuzItem = ({ item, goToPage }: JuzItemProps) => {
       key={item.juzId}
     >
       {/* second col */}
-      <View style={{ flex: 3 }}>
+      <View style={{ flex: 4 }}>
         {item.hezbs.map((hezb, hezbIndex) => (
           <View
             style={{
@@ -39,7 +27,7 @@ const JuzItem = ({ item, goToPage }: JuzItemProps) => {
             }}
             key={hezb.hezId}
           >
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 2 }}>
               {hezb.quarters.map((q, qIndex) => (
                 <TouchableOpacity
                   key={q.quarterName}
@@ -53,25 +41,43 @@ const JuzItem = ({ item, goToPage }: JuzItemProps) => {
                     goToPage(q.pageNumber);
                   }}
                 >
-                  <TextReg
-                    styles={{
+                  <View
+                    style={{
                       flex: 1,
-                      textAlign: "center",
                       paddingVertical: 5,
+                      alignItems: "center",
                     }}
                   >
-                    <>{q.pageNumber}</>
-                  </TextReg>
-                  <TextReg
-                    styles={{
+                    <TextReg styles={{ fontSize: 10 }}>
+                      {q.end.ayah.toString()}
+                    </TextReg>
+                    <TextReg styles={{ fontSize: 10 }}>{q.end.surah}</TextReg>
+                  </View>
+                  <View
+                    style={{
                       flex: 1,
+                      paddingVertical: 5,
+                      alignItems: "center",
                       borderLeftWidth: 1,
-                      textAlign: "center",
-                      paddingVertical: 5,
                     }}
                   >
-                    <>{qIndex + 1}</>
-                  </TextReg>
+                    <TextReg styles={{ fontSize: 10 }}>
+                      {q.start.ayah.toString()}
+                    </TextReg>
+                    <TextReg styles={{ fontSize: 10 }}>{q.start.surah}</TextReg>
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderLeftWidth: 1,
+                    }}
+                  >
+                    <TextReg>
+                      <>{qIndex + 1}</>
+                    </TextReg>
+                  </View>
                 </TouchableOpacity>
               ))}
             </View>

@@ -3,6 +3,10 @@ import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import Modal from "react-native-modal";
 import { Picker } from "@react-native-picker/picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAppDispatch } from "../../../hooks/reduxHooks";
+import { setTextBgColor } from "../../../store/reducers/textbgColor";
+import { setTextColor } from "../../../store/reducers/textSoundColor";
 
 type ColorModalProps = {
   modalVisible: boolean;
@@ -12,6 +16,7 @@ type ColorModalProps = {
 const ColorModal = ({ modalVisible, setModalVisible }: ColorModalProps) => {
   const [selectWordBgColor, setSelectWordBgColor] = useState("");
   const [selectWordColor, setSelectWordColor] = useState("");
+  const dispatch = useAppDispatch();
   return (
     <Modal
       isVisible={modalVisible}
@@ -42,7 +47,9 @@ const ColorModal = ({ modalVisible, setModalVisible }: ColorModalProps) => {
             <Text style={styles.label}>لون خلفية الكلمة</Text>
             <Picker
               selectedValue={selectWordBgColor}
-              onValueChange={(itemValue) => {
+              onValueChange={async (itemValue) => {
+                await AsyncStorage.setItem("text-bg", itemValue);
+                dispatch(setTextBgColor(itemValue));
                 setSelectWordBgColor(itemValue);
               }}
               style={styles.picker}
@@ -76,7 +83,9 @@ const ColorModal = ({ modalVisible, setModalVisible }: ColorModalProps) => {
             <Text style={styles.label}>لون الكلمة</Text>
             <Picker
               selectedValue={selectWordColor}
-              onValueChange={(itemValue) => {
+              onValueChange={async (itemValue) => {
+                await AsyncStorage.setItem("text-color", itemValue);
+                dispatch(setTextColor(itemValue));
                 setSelectWordColor(itemValue);
               }}
               style={styles.picker}

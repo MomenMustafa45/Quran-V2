@@ -67,7 +67,7 @@ const CustomDrawerHeader = () => {
           <>الجزء {parts[juzIndex ? juzIndex - 1 : 0].title}</>
         </TextReg>
       </View>
-      <TextBold styles={{ color: "white", fontSize: 20 }}>
+      <TextBold styles={{ color: "white", fontSize: 18 }}>
         مصحف المسلمين
       </TextBold>
       <View style={{ flexDirection: "row", alignItems: "center" }}>

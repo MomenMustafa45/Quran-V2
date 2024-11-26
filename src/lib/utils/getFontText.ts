@@ -1,5 +1,3 @@
-import * as FileSystem from "expo-file-system";
-import { Asset } from "expo-asset";
 import { fontMappings } from "./fontMappings";
 
 export const loadBase64Font = async (

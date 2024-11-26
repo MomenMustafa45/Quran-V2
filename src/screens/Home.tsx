@@ -17,7 +17,6 @@ import { useRoute } from "@react-navigation/native";
 import playSoundsFromPaths, { stopPlayback } from "../services/playSound";
 import JuzModal from "../components/UI/JuzModal/JuzModal";
 import SurahsModal from "../components/UI/SurahsModal/SurahsModal";
-import PageQuran from "../components/UI/PageQuran/PageQuran";
 import { fetchAndStoreQuranPages } from "../services/quranPagesServices";
 import * as FileSystem from "expo-file-system";
 import { QuranVerse } from "../lib/types/quranWordType";
@@ -134,7 +133,7 @@ const Home = () => {
               .filter((item) => item.id === quranVerseItem.id && item.audio_url)
               .map(
                 (item) =>
-                  `file:///data/user/0/host.exp.exponent/files//w${item.id}-v${item.verse_id}-p${item.page_number}.mp3`
+                  `${FileSystem.documentDirectory}w${item.id}-v${item.verse_id}-p${item.page_number}.mp3`
               );
           } else if (levelNumber === "2") {
             soundArr = quranVerses
@@ -146,7 +145,7 @@ const Home = () => {
               )
               .map(
                 (item) =>
-                  `file:///data/user/0/host.exp.exponent/files//w${item.id}-v${item.verse_id}-p${item.page_number}.mp3`
+                  `${FileSystem.documentDirectory}w${item.id}-v${item.verse_id}-p${item.page_number}.mp3`
               );
           } else if (levelNumber === "3") {
             // Level 3: All words that share the same verse_id
@@ -157,7 +156,7 @@ const Home = () => {
               )
               .map(
                 (item) =>
-                  `file:///data/user/0/host.exp.exponent/files//w${item.id}-v${item.verse_id}-p${item.page_number}.mp3`
+                  `${FileSystem.documentDirectory}w${item.id}-v${item.verse_id}-p${item.page_number}.mp3`
               );
           }
 
@@ -196,6 +195,7 @@ const Home = () => {
             console.log("All files are ready, playing sounds...");
             await playSoundsFromPaths(soundArr); // Play sounds
           } else {
+            console.log(soundArr, "from here");
             console.warn("Some files are still missing after download.");
           }
         }

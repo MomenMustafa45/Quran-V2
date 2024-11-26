@@ -1,10 +1,9 @@
-import { View, Text, Image, ImageBackground, Animated } from "react-native";
+import { View, ImageBackground, Animated } from "react-native";
 import React, { useEffect, useRef } from "react";
 import TextBold from "../components/UI/Texts/TextBold";
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { RootNavigationParamList } from "../navigation/Stack";
 import { StackNavigationProp } from "@react-navigation/stack";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type SplashScreenNavigationProp = StackNavigationProp<
   RootNavigationParamList,
@@ -17,22 +16,22 @@ const Splash = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
-  const getMoshafSelected = async () => {
-    try {
-      const selectedMoshaf = await AsyncStorage.getItem("mohsaf");
-      if (selectedMoshaf) {
-        navigate.dispatch(
-          CommonActions.reset({ index: 0, routes: [{ name: "Drawer" }] })
-        );
-      } else {
-        navigate.dispatch(
-          CommonActions.reset({ index: 0, routes: [{ name: "Landing" }] })
-        );
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getMoshafSelected = async () => {
+  //   try {
+  //     const selectedMoshaf = await AsyncStorage.getItem("mohsaf");
+  //     if (selectedMoshaf) {
+  //       navigate.dispatch(
+  //         CommonActions.reset({ index: 0, routes: [{ name: "Drawer" }] })
+  //       );
+  //     } else {
+  //       navigate.dispatch(
+  //         CommonActions.reset({ index: 0, routes: [{ name: "Landing" }] })
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   useEffect(() => {
     const isMoshafSelected = Animated.parallel([
@@ -50,7 +49,7 @@ const Splash = () => {
 
     const timeout = setTimeout(() => {
       navigate.dispatch(
-        CommonActions.reset({ index: 0, routes: [{ name: "Drawer" }] })
+        CommonActions.reset({ index: 0, routes: [{ name: "Landing" }] })
       );
     }, 4000);
 

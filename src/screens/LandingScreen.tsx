@@ -21,14 +21,14 @@ const LandingScreen = () => {
       id: "2",
       text: "مصحف المدينة شعبة",
       image: require("../../assets/images/LandingImages/Mushaf_AlMadinah-Shopaa.png"),
-      downloadMoshaf: true,
+      downloadMoshaf: false,
     },
 
     {
       id: "1",
       text: "مصحف المدينة حفص",
       image: require("../../assets/images/LandingImages/Mushaf_AlMadinah-Hafs.png"),
-      downloadMoshaf: false,
+      downloadMoshaf: true,
     },
     {
       id: "4",
@@ -82,6 +82,7 @@ const LandingScreen = () => {
             onPress={handleNavigateToHome}
             accessibilityLabel={`مصحف ${item.text}`}
             style={{ width: "49%" }}
+            disabled={item.id != "1"}
           >
             <View style={styles.card}>
               <Image source={item.image} style={styles.cardImage} />

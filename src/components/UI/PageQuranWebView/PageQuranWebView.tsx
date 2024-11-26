@@ -46,6 +46,31 @@ const PageQuranWebView = ({
     fetchFont();
   }, [pageNumber]);
 
+  const handleListen = async (itemVerse: QuranVerse) => {
+    const levelNumber = (await AsyncStorage.getItem("levelSound")) || "1";
+    let soundArr: QuranVerse[] = [];
+
+    if (levelNumber === "1") {
+      soundArr = dataPage.filter(
+        (item) => item.id === itemVerse.id && item.audio_url
+      );
+    } else if (levelNumber === "2") {
+      soundArr = dataPage.filter(
+        (item) =>
+          (item.id === itemVerse.id || item.id === itemVerse.id + 1) &&
+          item.audio_url
+      );
+    } else if (levelNumber === "3") {
+      soundArr = dataPage.filter(
+        (item) => item.verse_id === itemVerse.verse_id && item.audio_url
+      );
+    }
+
+    setSoundsPlayingArr([...soundArr]);
+    await listenHandler(itemVerse, dataPage, pageNumber, levelNumber);
+    setSoundsPlayingArr([]);
+  };
+
   // Wait until base64Font is loaded to render WebView
   if (!base64Font) {
     return null; // You can add a loading spinner here if desired
@@ -183,31 +208,6 @@ const PageQuranWebView = ({
     if (itemVerse) {
       await handleListen(itemVerse);
     }
-  };
-
-  const handleListen = async (itemVerse: QuranVerse) => {
-    const levelNumber = (await AsyncStorage.getItem("levelSound")) || "1";
-    let soundArr: QuranVerse[] = [];
-
-    if (levelNumber === "1") {
-      soundArr = dataPage.filter(
-        (item) => item.id === itemVerse.id && item.audio_url
-      );
-    } else if (levelNumber === "2") {
-      soundArr = dataPage.filter(
-        (item) =>
-          (item.id === itemVerse.id || item.id === itemVerse.id + 1) &&
-          item.audio_url
-      );
-    } else if (levelNumber === "3") {
-      soundArr = dataPage.filter(
-        (item) => item.verse_id === itemVerse.verse_id && item.audio_url
-      );
-    }
-
-    setSoundsPlayingArr([...soundArr]);
-    await listenHandler(itemVerse, dataPage, pageNumber, levelNumber);
-    setSoundsPlayingArr([]);
   };
 
   return (

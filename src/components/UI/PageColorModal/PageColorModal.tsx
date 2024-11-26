@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppDispatch } from "../../../hooks/reduxHooks";
 import { setTextBgColor } from "../../../store/reducers/textbgColor";
 import { setTextColor } from "../../../store/reducers/textSoundColor";
+import { setPageColor } from "../../../store/reducers/pageColorSlice";
 type ColorModalProps = {
   modalVisible: boolean;
   setModalVisible: (value: boolean) => void;
@@ -14,6 +15,7 @@ type ColorModalProps = {
 
 const PageColorModal = ({ modalVisible, setModalVisible }: ColorModalProps) => {
   const [selectWordBgColor, setSelectWordBgColor] = useState("");
+  const dispatch = useAppDispatch();
   return (
     <Modal
       isVisible={modalVisible}
@@ -34,7 +36,9 @@ const PageColorModal = ({ modalVisible, setModalVisible }: ColorModalProps) => {
           <Text style={styles.label}>لون خلفية الصفحة</Text>
           <Picker
             selectedValue={selectWordBgColor}
-            onValueChange={(itemValue) => {
+            onValueChange={async (itemValue) => {
+              await AsyncStorage.setItem("page-color", itemValue);
+              dispatch(setPageColor(itemValue));
               setSelectWordBgColor(itemValue);
             }}
             style={styles.picker}
