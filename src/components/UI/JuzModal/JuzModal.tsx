@@ -1,7 +1,6 @@
-import React, { useCallback, useMemo } from "react";
-import { StyleSheet, View, TouchableOpacity, ScrollView } from "react-native";
+import React, { memo, useCallback, useMemo } from "react";
+import { StyleSheet, View, FlatList } from "react-native";
 import Modal from "react-native-modal";
-import TextReg from "../Texts/TextReg";
 import { mushafFirstTenJuz } from "../../../lib/utils/partData";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { closeJuzModal } from "../../../store/reducers/juzIndexSlice";
@@ -34,6 +33,13 @@ const JuzModal = ({ goToPage }: IndexModalProps) => {
 
   // Memoize parts data to prevent re-computation
   const memoizedParts = useMemo(() => mushafFirstTenJuz, []);
+
+  const renderItem = useCallback(
+    ({ item }: { item: (typeof memoizedParts)[0] }) => (
+      <JuzItem item={item} key={item.juzId} goToPage={handleIndexButton} />
+    ),
+    []
+  );
 
   return (
     <Modal
@@ -68,21 +74,22 @@ const JuzModal = ({ goToPage }: IndexModalProps) => {
           </View>
         </View>
         {/* modal header */}
-        <ScrollView>
-          {memoizedParts.map((item) => (
-            <JuzItem
-              item={item}
-              key={item.juzId}
-              goToPage={handleIndexButton}
-            />
-          ))}
-        </ScrollView>
+
+        <FlatList
+          data={memoizedParts}
+          keyExtractor={(item) => item.juzId.toString()}
+          renderItem={renderItem}
+          maxToRenderPerBatch={4}
+          updateCellsBatchingPeriod={5}
+          initialNumToRender={4}
+          windowSize={10}
+        />
       </View>
     </Modal>
   );
 };
 
-export default JuzModal;
+export default memo(JuzModal);
 
 const styles = StyleSheet.create({
   modalContainer: {

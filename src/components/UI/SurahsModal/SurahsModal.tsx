@@ -1,11 +1,10 @@
-import React, { useCallback, useMemo } from "react";
+import React, { memo, useCallback, useMemo } from "react";
 import {
   StyleSheet,
   View,
   FlatList,
   TouchableOpacity,
   Text,
-  ScrollView,
 } from "react-native";
 import Modal from "react-native-modal";
 import TextReg from "../Texts/TextReg";
@@ -35,15 +34,15 @@ const SurahsModal = ({ goToPage }: IndexModalProps) => {
     dispatch(pageIndexHandler(604 - item));
   };
 
+  // Memoize surahsData for performance, assuming it's static data
+  const memoizedSurahsData = useMemo(() => surahsData, []);
+
   const renderItem = useCallback(
-    ({
-      item,
-      index,
-    }: {
-      item: { start_page: number; name_arabic: string; name_code: string };
-      index: number;
-    }) => (
-      <TouchableOpacity onPress={() => handleIndexButton(item.start_page)}>
+    ({ item, index }: { item: (typeof surahsData)[0]; index: number }) => (
+      <TouchableOpacity
+        onPress={() => handleIndexButton(item.start_page)}
+        key={item.id}
+      >
         <View style={styles.listItem}>
           <TextReg>{item.start_page.toString()}</TextReg>
           <View style={{ flexDirection: "row" }}>
@@ -55,18 +54,8 @@ const SurahsModal = ({ goToPage }: IndexModalProps) => {
         </View>
       </TouchableOpacity>
     ),
-    [handleIndexButton]
-  );
-
-  // Memoized keyExtractor function
-  const keyExtractor = useCallback(
-    (_: { start_page: number; name_arabic: string }, index: number) =>
-      index.toString(),
     []
   );
-
-  // Memoize surahsData for performance, assuming it's static data
-  const memoizedSurahsData = useMemo(() => surahsData, []);
 
   return (
     <Modal
@@ -83,32 +72,18 @@ const SurahsModal = ({ goToPage }: IndexModalProps) => {
           <TextReg styles={{ color: "white" }}>رقم الصفحة</TextReg>
           <TextReg styles={{ color: "white" }}>السورة</TextReg>
         </View>
-        <ScrollView>
-          {memoizedSurahsData.map((item, index) => (
-            <TouchableOpacity
-              onPress={() => handleIndexButton(item.start_page)}
-              key={item.id}
-            >
-              <View style={styles.listItem}>
-                <TextReg>{item.start_page.toString()}</TextReg>
-                <View style={{ flexDirection: "row" }}>
-                  <Text style={{ fontFamily: "surahNames" }}>
-                    {item.name_code}
-                  </Text>
-                  <TextReg>
-                    <>.{index + 1}</>
-                  </TextReg>
-                </View>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+
+        <FlatList
+          data={memoizedSurahsData}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderItem}
+        />
       </View>
     </Modal>
   );
 };
 
-export default SurahsModal;
+export default memo(SurahsModal);
 
 const styles = StyleSheet.create({
   modalContainer: {

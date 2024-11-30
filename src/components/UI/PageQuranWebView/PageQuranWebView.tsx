@@ -143,6 +143,7 @@ const PageQuranWebView = ({
             flex-direction: column;
             margin: 30px;
             background-color:${pageColor};
+            padding: 0px 15px;
           }
           .line, .verse-line, .bismillah-line {
             display: flex;
@@ -229,6 +230,8 @@ export default PageQuranWebView;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // paddingHorizontal: 15,
+    // backgroundColor: "#fff",
   },
   webView: {
     width: "100%",

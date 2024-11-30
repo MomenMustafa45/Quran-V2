@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import { View, TouchableOpacity } from "react-native";
+import React, { memo } from "react";
 import TextReg from "../../Texts/TextReg";
 import { MushafJuzs } from "../JuzModal";
 
@@ -125,4 +125,4 @@ const JuzItem = ({ item, goToPage }: JuzItemProps) => {
   );
 };
 
-export default JuzItem;
+export default memo(JuzItem);

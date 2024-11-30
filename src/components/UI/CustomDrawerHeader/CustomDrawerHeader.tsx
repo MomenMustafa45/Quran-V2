@@ -62,9 +62,18 @@ const CustomDrawerHeader = () => {
       <TouchableOpacity onPress={juzModalOpen}>
         <Entypo name="menu" size={22} color="white" />
       </TouchableOpacity>
-      <View>
+      <View
+        style={{
+          width: 60,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <TextReg styles={{ fontSize: 12, color: "white" }}>
-          <>الجزء {parts[juzIndex ? juzIndex - 1 : 0].title}</>
+          <>الجزء</>
+        </TextReg>
+        <TextReg styles={{ fontSize: 10, color: "white" }}>
+          <>{juzIndex}</>
         </TextReg>
       </View>
       <TextBold styles={{ color: "white", fontSize: 18 }}>

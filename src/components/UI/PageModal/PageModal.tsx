@@ -1,11 +1,10 @@
-import React, { useMemo, useState } from "react";
+import React, { memo, useCallback, useMemo, useState } from "react";
 import {
   StyleSheet,
   View,
   TouchableOpacity,
   FlatList,
   TextInput,
-  Button,
 } from "react-native";
 import Modal from "react-native-modal";
 import TextReg from "../Texts/TextReg";
@@ -62,6 +61,34 @@ const PageModal = ({ goToPage }: IndexModalProps) => {
     []
   );
 
+  const renderItem = useCallback(
+    ({ item }: { item: (typeof pages)[0] }) => (
+      <TouchableOpacity
+        onPress={() => {
+          dispatch(
+            pageIndexHandler(parseInt((604 - parseInt(item)).toString()))
+          );
+          handleIndexButton(parseInt(item));
+        }}
+      >
+        <View style={styles.listItem}>
+          <TextReg>{item}</TextReg>
+          <View style={{ display: "flex", flexDirection: "row" }}>
+            <MaterialCommunityIcons
+              name="book-open-page-variant-outline"
+              size={24}
+              color="#34A853"
+            />
+            <TextReg>
+              <> .{item}</>
+            </TextReg>
+          </View>
+        </View>
+      </TouchableOpacity>
+    ),
+    []
+  );
+
   return (
     <Modal
       isVisible={modalVisible}
@@ -100,37 +127,16 @@ const PageModal = ({ goToPage }: IndexModalProps) => {
         <FlatList
           data={pages}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => {
-                dispatch(
-                  pageIndexHandler(parseInt((604 - parseInt(item)).toString()))
-                );
-                handleIndexButton(parseInt(item));
-              }}
-            >
-              <View style={styles.listItem}>
-                <TextReg>{item}</TextReg>
-                <View style={{ display: "flex", flexDirection: "row" }}>
-                  <MaterialCommunityIcons
-                    name="book-open-page-variant-outline"
-                    size={24}
-                    color="#34A853"
-                  />
-                  <TextReg>
-                    <> .{item}</>
-                  </TextReg>
-                </View>
-              </View>
-            </TouchableOpacity>
-          )}
+          renderItem={renderItem}
+          initialNumToRender={8}
+          maxToRenderPerBatch={5}
         />
       </View>
     </Modal>
   );
 };
 
-export default PageModal;
+export default memo(PageModal);
 
 const styles = StyleSheet.create({
   modalContainer: {
