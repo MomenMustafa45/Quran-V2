@@ -73,7 +73,7 @@ const CustomDrawerHeader = () => {
           <>الجزء</>
         </TextReg>
         <TextReg styles={{ fontSize: 10, color: "white" }}>
-          <>{juzIndex}</>
+          <>{juzIndex ? juzIndex : 1}</>
         </TextReg>
       </View>
       <TextBold styles={{ color: "white", fontSize: 18 }}>
