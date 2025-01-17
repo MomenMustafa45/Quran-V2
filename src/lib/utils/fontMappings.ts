@@ -1,4 +1,4 @@
-export const fontMappings = {
+export const fontMappings: { [key: string]: any; [key: number]: any } = {
   BSML: require("../../../assets/quran-fonts/BSML.ts").default.font,
   2001: require("../../../assets/quran-fonts/2001.ts").default.font,
   2002: require("../../../assets/quran-fonts/2002.ts").default.font,

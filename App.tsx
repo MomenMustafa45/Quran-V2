@@ -3,13 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import StackNavigation from "./src/navigation/Stack";
 import useFonts from "./src/hooks/useFonts";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import {
-  ActivityIndicator,
-  StatusBar,
-  View,
-  I18nManager,
-  AppRegistry,
-} from "react-native";
+import { StatusBar, View, I18nManager, AppRegistry } from "react-native";
 import Toast from "react-native-toast-message";
 import { Provider } from "react-redux";
 import { store } from "./src/store/store";
@@ -51,14 +45,6 @@ export default function App() {
       loadFonts();
     }
   }, []);
-
-  if (!isReady) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
 
   return (
     <SafeAreaProvider style={{ flex: 1 }}>

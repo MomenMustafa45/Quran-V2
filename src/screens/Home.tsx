@@ -240,16 +240,8 @@ const Home = () => {
 
   return (
     <>
-      <CustomDrawerHeader />
+      <CustomDrawerHeader isGettingMoreAudios={isGettingMoreAudios} />
       <View style={styles.container}>
-        {isGettingMoreAudios && (
-          <View style={styles.audioLoading}>
-            <ActivityIndicator size="small" color="#fff" />
-            <TextBold styles={{ fontSize: 12, color: "white", paddingTop: 4 }}>
-              جاري تحميل الصوتيات
-            </TextBold>
-          </View>
-        )}
         <FlatList
           pagingEnabled
           horizontal
@@ -297,15 +289,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  audioLoading: {
-    position: "absolute",
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 40,
-    top: -16,
   },
   pageContainer: {
     width,

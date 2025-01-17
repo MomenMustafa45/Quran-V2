@@ -86,7 +86,7 @@ const JuzItem = ({ item, goToPage }: JuzItemProps) => {
                 flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: hezbIndex % 2 == 0 ? "gray" : "green",
+                backgroundColor: hezbIndex % 2 == 0 ? "#fed7aa" : "#c7d2fe",
                 flex: 1,
                 height: "100%",
                 borderBottomWidth: 1,

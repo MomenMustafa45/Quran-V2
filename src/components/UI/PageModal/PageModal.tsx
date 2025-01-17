@@ -106,12 +106,16 @@ const PageModal = ({ goToPage }: IndexModalProps) => {
         <View style={styles.modalHeader}>
           <View>
             <TouchableOpacity
-              style={{ backgroundColor: "gray", padding: 5, borderRadius: 5 }}
+              style={{
+                backgroundColor: "#fee2e2",
+                padding: 5,
+                borderRadius: 5,
+              }}
               onPress={() => {
                 goBtnHandler();
               }}
             >
-              <TextReg styles={{ color: "white" }}>ذهاب</TextReg>
+              <TextReg>ذهاب</TextReg>
             </TouchableOpacity>
           </View>
           <View style={{ flex: 1 }}>
@@ -172,5 +176,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#34A853",
     padding: 5,
     alignItems: "center",
+    columnGap: 8,
   },
 });

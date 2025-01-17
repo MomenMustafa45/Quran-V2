@@ -1,4 +1,10 @@
-import { View, TouchableOpacity, Text } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+} from "react-native";
 import React from "react";
 import { Entypo, Feather } from "@expo/vector-icons";
 import TextReg from "../Texts/TextReg";
@@ -11,7 +17,13 @@ import { surahsData } from "../../../lib/utils/surahData";
 import { parts } from "../../../lib/utils/partData";
 import TextBold from "../Texts/TextBold";
 
-const CustomDrawerHeader = () => {
+type CustomDrawerHeaderProps = {
+  isGettingMoreAudios: boolean;
+};
+
+const CustomDrawerHeader = ({
+  isGettingMoreAudios,
+}: CustomDrawerHeaderProps) => {
   const pageIndex = useAppSelector((state) => state.pageIndex.value);
   const surahIndex = useAppSelector((state) => state.surahIndex.value);
   const juzIndex = useAppSelector((state) => state.juzIndex.value);
@@ -76,9 +88,24 @@ const CustomDrawerHeader = () => {
           <>{juzIndex ? juzIndex : 1}</>
         </TextReg>
       </View>
-      <TextBold styles={{ color: "white", fontSize: 18 }}>
-        مصحف المسلمين
-      </TextBold>
+
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <TextBold styles={styles.moshafTitle}>مصحف المسلمين</TextBold>
+        {isGettingMoreAudios && (
+          <View style={styles.audioLoading}>
+            <ActivityIndicator size="small" color="#fff" />
+            <TextBold styles={{ fontSize: 8, color: "white" }}>
+              جاري تحميل الصوتيات...
+            </TextBold>
+          </View>
+        )}
+      </View>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text
           style={{
@@ -103,5 +130,19 @@ const CustomDrawerHeader = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  audioLoading: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+  },
+  moshafTitle: {
+    color: "white",
+    fontSize: 18,
+    textAlign: "center",
+  },
+});
 
 export default CustomDrawerHeader;

@@ -49,7 +49,7 @@ const Splash = () => {
 
     const timeout = setTimeout(() => {
       navigate.dispatch(
-        CommonActions.reset({ index: 0, routes: [{ name: "Landing" }] })
+        CommonActions.reset({ index: 0, routes: [{ name: "Drawer" }] })
       );
     }, 4000);
 
